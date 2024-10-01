@@ -1,0 +1,85 @@
+.text-game-timer {
+    padding-left: 0.6em;
+}
+
+.text-game-heading {
+    font-size: 1em;
+    font-weight: bold;
+}
+
+.text-game-small {
+    font-size: 1.2em;
+}
+
+.text-game-hint {
+    width: 20em;
+    height: 2em;
+    line-height: 0.85em;
+    font-style:  italic;
+    font-size: 0.8em;
+}
+
+.text-game-hint.hidden {
+    visibility: hidden;
+}
+
+.text-game {
+    font-weight: bold;
+}
+
+.text-game-number {
+    font-size: 1em;
+    font-weight: bold;
+}
+
+.text-game-letters {
+    font-size: .8em;
+}
+
+.text-game-answer {
+    font-size: .8em;
+}
+
+.text-game-solution {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: var(--answer-color);
+}
+
+.text-info-title {
+    font-weight: bold;
+    font-size: 1.5em;
+}
+
+.text-info-heading {
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+.text-stats-heading {
+    font-weight: bold;
+    font-size: 1em;
+}
+
+.text-stats-grade {
+    font-weight: bold;
+}
+
+.text-welcome-title {
+    font-weight: bolder;
+    font-size: 1.2em;
+}
+
+.text-welcome-subtitle {
+    font-size: 0.8em;
+    font-weight: bold;
+}
+
+.text-welcome-date {
+    font-weight: bold;
+    font-size: 0.8em;
+}
+
+.text-welcome-puzzle {
+    font-size: 0.8em;
+}

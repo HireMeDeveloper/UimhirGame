@@ -4,10 +4,261 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="script.js"></script>
+    <link rel="stylesheet" href="styles/format.css">
+    <link rel="stylesheet" href="styles/style.css">
+    <link rel="stylesheet" href="styles/text.css">
+    <script src="scripts/timer.js" defer></script>
+    <script src="scripts/game.js" defer></script>
+    <script src="scripts/main.js" defer></script>
+    <script src="scripts/unitTesting.js" defer></script>
 </head>
-<body>
-    
+<body class="off-white">
+    <div id="game" class="page">
+        <div>
+            <div class="alert-container" data-alert-container></div>
+            <div class="header">
+                <div>
+                    <img src="resources/Conundrum horizontal.svg" class="conundrum-horizontal-icon">
+                </div>
+                <div>
+                    <a onclick="showPage('info')">
+                        <img src="resources/info-icon.svg" class="icon">
+                    </a>
+                </div>
+                <div>
+                    <a onclick="showPage('stats')">
+                        <img src="resources/stats-icon.svg" class="icon">
+                    </a>
+                </div>
+            </div>
+            <div class="underline"></div>
+        </div>
+        <div class="centered gap" style="--amount: 1em;">
+            <canvas class="" id="circleCanvas" width="400" height="400" style="width: 6em; height: 6em;"></canvas>
+            <div class="no-display" style="height: 6em;" data-answer-element>
+                <div class="text-game-answer">Answer:</div>
+                <div class="text-game-solution" data-answer-text>Example</div>
+            </div>
+        </div>
+        <div class="gap centered" style="--amount: 0.5em">
+            <div class="text-game-heading centered">
+                Target
+            </div>
+        </div>
+        <div class="centered">
+            <div class="target-box" style="--color: green">350</div>
+        </div>
+        <div class="gap centered" style="--amount: 1em">
+            <div class="text-game-heading centered">
+                Your Sums
+            </div>
+        </div>
+        <div class="centered">
+            <div class="box sums">
+                <div>175 &emsp; + &emsp; 15 &emsp; = &emsp; 190</div>
+                <div>175 &emsp; + &emsp; 15 &emsp; = &emsp; 190</div>
+                <div>175 &emsp; + &emsp; 15 &emsp; = &emsp; 190</div>
+                <div>175 &emsp; + &emsp; 15 &emsp; = &emsp; 190</div>
+                <div>175 &emsp; + &emsp; 15 &emsp; = &emsp; 190</div>
+            </div>
+        </div>
+        <div class="gap centered" style="--amount: 1em">
+            <div class="text-game-heading centered">
+                Your Answer
+            </div>
+        </div>
+        <div class="centered">
+            <div class="target-box" style="--color: orange">350</div>
+        </div>
+        <div class="keyboard gap" style="--amount: 1em">
+            <button class="key white">75</button>
+            <button class="key green">25</button>
+            <button class="key green">10</button>
+            <button class="key white">1</button>
+            <button class="key white">2</button>
+            <button class="key white">3</button>
+            <div class="space"></div>
+            <button class="key medium white">750</button>
+            <button class="key medium green">15</button>
+            <button class="key medium grey"></button>
+            <button class="key medium grey"></button>
+            <div class="space"></div>
+            <div class="space"></div>
+            <button class="key medium white">+</button>
+            <button class="key medium white">-</button>
+            <button class="key medium white">/</button>
+            <button class="key medium white">X</button>
+            <div class="space"></div>
+            <button class="key large white">=</button>
+            <button class="key large white">Clear</button>
+            <button class="key large white">Bspc</button>
+        </div>
+        <div>
+            <div class="centered gap" style="--amount: 1em">
+                <button class="button play-again" data-button-two>Play Next</button>
+            </div>
+        </div>
+        <div class="centered gap"  style="--amount: 0.75em">
+            <div class="text-game-number" data-game-text>Game</div>
+        </div>
+        <div class="centered text-game-letters">
+            <div data-game-letters>1 of 3</div>
+        </div>
+    </div>
+    <div id="info" class="page active">
+        <div class="text-info-title gap centered" style="--amount: 1.5em">
+            How To Play
+        </div>
+        <div class="centered">
+            <div class="text-box-info heading gap centered" style="--amount: 1.1em">
+                Three Daily Games, 30 Seconds each
+            </div>
+        </div>
+        <div class="centered">
+            <div class="text-box-info gap centered" style="--amount: 1.1em">
+                Use any combination of six numbers to reach <br> the target number.
+            </div>
+        </div>
+        <div class="centered gap" style="--amount: 1em;">
+            <canvas class="" id="infoCanvas" width="400" height="400" style="width: 6em; height: 6em;"></canvas>
+            <div class="no-display" style="height: 6em;" data-answer-element>
+                <div class="text-game-answer">Answer:</div>
+                <div class="text-game-solution" data-answer-text>Example</div>
+            </div>
+        </div>
+        <div class="centered">
+            <div class="text-box-info heading gap centered" style="--amount: 1.1em">
+                Tile Colours
+            </div>
+        </div>
+        <div class="centered">
+            <div class="text-box-info gap centered" style="--amount: .2em">
+                Each of the six numbers in white <br>can be used only once. The Colour of the tiles change to green when used.
+                The tiles on the second row, are the results of your calculations. These can also be used to get the answer.
+            </div>
+        </div>
+        <div class="centered">
+            <div class="text-box-info heading gap centered" style="--amount: 1.1em">
+                Results
+            </div>
+        </div>
+        <div class="centered">
+            <div class="text-box-info gap centered" style="--amount: .2em">
+                After three daily rounds, <br>you receive a grading depending on how <br>close you are to the answer each time.
+            </div>
+        </div>
+        <div class="centered gap" style="--amount: 1.5em">
+            <button class="button play" data-play-button>
+                Play
+            </button>
+        </div>
+    </div>
+    <div id="stats" class="page">
+        <div>
+            <div class="alert-container" data-stats-alert-container></div>
+            <div class="header">
+                <div>
+                    <img src="resources/Conundrum horizontal.svg" class="conundrum-horizontal-icon">
+                </div>
+                <div>
+                    <a onclick="showPage('info')">
+                        <img src="resources/info-icon.svg" class="icon">
+                    </a>
+                </div>
+                <div>
+                    <a onclick="showPage('game')">
+                        <img src="resources/x-symbol.svg" class="icon">
+                    </a>
+                </div>
+            </div>
+            <div class="underline"></div>
+        </div>
+        <div class="text-stats-heading gap" style="--amount: 1.2em">
+            Your Statistics Today
+        </div>
+        <div class="stats-grid" data-statistics-today>
+            <div class="statistic">
+                <h4 class="statistic-data">0</h4>
+                <p class="statistic-label">Current Streak</p>
+            </div>
+            <div class="statistic">
+                <h4 class="statistic-data">0</h4>
+                <p class="statistic-label">Win</p>
+            </div>
+            <div class="statistic">
+                <h4 class="statistic-data">0</h4>
+                <p class="statistic-label">1 to 3</p>
+            </div>
+            <div class="statistic">
+                <h4 class="statistic-data">0</h4>
+                <p class="statistic-label">4 to 10</p>
+            </div>
+            <div class="statistic">
+                <h4 class="statistic-data">0</h4>
+                <p class="statistic-label">> 10</p>
+            </div>
+            <div class="statistic large">
+                <h4 class="statistic-data">N/A</h4>
+                <p class="statistic-label text-stats-grade">Today's Grade</p>
+            </div>
+        </div>
+        <div class="text-stats-heading gap" style="--amount: 1.2em">
+            Your Overall Statistics
+        </div>
+        <div class="stats-grid" data-statistics-overall>
+            <div class="statistic">
+                <h4 class="statistic-data">0</h4>
+                <p class="statistic-label">Played</p>
+            </div>
+            <div class="statistic">
+                <h4 class="statistic-data">0</h4>
+                <p class="statistic-label">Win</p>
+            </div>
+            <div class="statistic">
+                <h4 class="statistic-data">0</h4>
+                <p class="statistic-label">1 to 3</p>
+            </div>
+            <div class="statistic">
+                <h4 class="statistic-data">0</h4>
+                <p class="statistic-label">4 to 10</p>
+            </div>
+            <div class="statistic">
+                <h4 class="statistic-data">0</h4>
+                <p class="statistic-label">> 10</p>
+            </div>
+            <div class="statistic large">
+                <h4 class="statistic-data">N/A</h4>
+                <p class="statistic-label text-stats-grade">Overall Grade</p>
+            </div>
+        </div>
+        
+        <div class="centered gap" style="--amount: 6em">
+            <button class="button share" onclick="pressShare()" data-share-button>
+                Share
+            </button>
+        </div>
+    </div>
+    <div id="welcome" class="page">
+        <div class="centered gap" style="--amount: 2em">
+            <img src="resources/Conundrum vertical.svg" class="welcome-header" alt="">
+        </div>
+        <div class="text-welcome-title gap centered" style="--amount: 3em" data-welcome-header>
+            None
+        </div>
+        <div class="text-box-welcome long gap centered" style="--amount: 0.5em" data-welcome-message>
+            None
+        </div>
+        <div class="centered gap" style="--amount: 14em">
+            <button class="button welcome" onclick="showPage('game')" data-welcome-button>
+                None
+            </button>
+        </div>
+        <div class="text-welcome-date gap centered" style="--amount: 1.25em" data-welcome-date>
+            None
+        </div>
+        <div class="text-welcome-puzzle centered" data-welcome-number style="visibility: hidden;">
+            None
+        </div>
+    </div>
 </body>
 </html>
