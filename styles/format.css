@@ -69,6 +69,10 @@ html {
     visibility: collapse;
 }
 
+.hidden {
+    visibility: hidden;
+}
+
 .keyboard {
     display: grid;
     grid-template-columns: repeat(18, minmax(auto, .75em));
@@ -79,6 +83,10 @@ html {
 
 .space {
     grid-column: span 1;
+}
+
+.white {
+    background-color: white;
 }
 
 .key {
@@ -105,10 +113,6 @@ html {
 
 .key.green {
     background-color: green;
-}
-
-.white {
-    background-color: white;
 }
 
 .off-white {

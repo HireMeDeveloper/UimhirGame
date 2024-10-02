@@ -46,7 +46,7 @@
             </div>
         </div>
         <div class="centered">
-            <div class="target-box" style="--color: green">350</div>
+            <div class="target-box" style="--color: green" data-target>350</div>
         </div>
         <div class="gap centered" style="--amount: 1em">
             <div class="text-game-heading centered">
@@ -54,7 +54,7 @@
             </div>
         </div>
         <div class="centered">
-            <div class="box sums">
+            <div class="box sums"  data-sums>
                 <div>175 &emsp; + &emsp; 15 &emsp; = &emsp; 190</div>
                 <div>175 &emsp; + &emsp; 15 &emsp; = &emsp; 190</div>
                 <div>175 &emsp; + &emsp; 15 &emsp; = &emsp; 190</div>
@@ -68,18 +68,18 @@
             </div>
         </div>
         <div class="centered">
-            <div class="target-box" style="--color: orange">350</div>
+            <div class="target-box" style="--color: orange" data-answer>350</div>
         </div>
-        <div class="keyboard gap" style="--amount: 1em">
-            <button class="key white">75</button>
-            <button class="key green">25</button>
-            <button class="key green">10</button>
-            <button class="key white">1</button>
-            <button class="key white">2</button>
-            <button class="key white">3</button>
+        <div class="keyboard gap" style="--amount: 1em" data-keyboard>
+            <button class="key small white">75</button>
+            <button class="key small white">25</button>
+            <button class="key small white">10</button>
+            <button class="key small white">1</button>
+            <button class="key small white">2</button>
+            <button class="key small white">3</button>
             <div class="space"></div>
-            <button class="key medium white">750</button>
-            <button class="key medium green">15</button>
+            <button class="key medium grey"></button>
+            <button class="key medium grey"></button>
             <button class="key medium grey"></button>
             <button class="key medium grey"></button>
             <div class="space"></div>
@@ -87,15 +87,15 @@
             <button class="key medium white">+</button>
             <button class="key medium white">-</button>
             <button class="key medium white">/</button>
-            <button class="key medium white">X</button>
+            <button class="key medium white">*</button>
             <div class="space"></div>
-            <button class="key large white">=</button>
-            <button class="key large white">Clear</button>
-            <button class="key large white">Bspc</button>
+            <button class="key large white" onclick="pressEquals()">=</button>
+            <button class="key large white" onclick="pressClear()">Clear</button>
+            <button class="key large white" onclick="pressBackspace()">Bspc</button>
         </div>
         <div>
             <div class="centered gap" style="--amount: 1em">
-                <button class="button play-again" data-button-two>Play Next</button>
+                <button class="button play-again" onclick="playNext()" data-next>Play Next</button>
             </div>
         </div>
         <div class="centered gap"  style="--amount: 0.75em">

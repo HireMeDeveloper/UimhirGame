@@ -32,7 +32,7 @@ fetchData()
 function fetchData() {
     const msOffset = Date.now() - DATE_OF_FIRST_PUZZLE
     const dayOffset = msOffset / 1000 / 60 / 60 / 24
-    let targetIndex = Math.floor(dayOffset + 0) % puzzleList.length
+    let targetIndex = Math.floor(dayOffset + 0)
     targetGameNumber = targetIndex
 
     fetchCumulativeData()
@@ -111,8 +111,6 @@ function showPage(pageId, oldPage = null) {
     if (pageId === "game") {
         updateBodyColor(true)
         openGame()
-
-        drawGameCircle(27 / 30, "00:27")
     }
     else if (pageId === "stats") {
         updateBodyColor(false)
@@ -141,10 +139,14 @@ function startInteraction() {
     document, addEventListener("keydown", handleKeyPress)
 
     canInteract = true
+
+    hideNext()
 }
 
 function stopInteraction() {
     canInteract = false
+
+    showNext()
 }
 
 function storeGameStateData() {
@@ -161,10 +163,10 @@ function fetchGameState() {
     if (localStateJSON != null) {
         localGameState = JSON.parse(localStateJSON)
 
-        if (localGameState.gameNumber === (targetGameNumber + 1)) {
+        if (localGameState.puzzleNumber === targetGameNumber) {
             gameState = localGameState
         } else {
-            console.log("Game state was reset since puzzle does not match: " + localGameState.gameNumber + " & " + targetGameNumber)
+            console.log("Game state was reset since puzzle does not match: " + localGameState.puzzleNumber + " & " + targetGameNumber)
             resetGameState()
         }
     } else {
@@ -221,7 +223,7 @@ function generateWelcomeMessage() {
         }
     } else {
         welcomeHeader.textContent = "Hello"
-        welcomeMessage.innerHTML = "There will be another <br> Conundrum tomorrow.<br> See you then!"
+        welcomeMessage.innerHTML = "There will be another <br> Uimhir tomorrow.<br> See you then!"
         welcomeMessage.classList.remove('long')
         welcomeButton.textContent = "See Stats"
         welcomeButton.onclick = () => {

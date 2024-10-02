@@ -9,7 +9,6 @@ function drawGameCircle(value, text) {
 }
 
 function drawCircle(canvas, value, text) {
-    console.log(canvas);
     const ctx = canvas.getContext('2d');
     const radius = canvas.width * .45; // Radius of the circle
     const centerX = canvas.width / 2;
