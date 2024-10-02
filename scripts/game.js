@@ -322,6 +322,7 @@ function loadPuzzleFromState(index) {
     let currentGame = gameState.games[gameState.currentGame]
 
     applyButtonsPressedForCurrentPuzzle()
+    restoreOperationButtons()
 
     if (currentGame.isWin) {
         currentGuess = currentGame.solution.split('')
@@ -596,8 +597,20 @@ function completeSum() {
 
     updateExtraButtons();
 
+    restoreOperationButtons()
+
     activeGame.sums.push([])
     storeGameStateData()
+}
+
+function restoreOperationButtons() {
+    const keys = keyboard.querySelectorAll('.key');
+
+    keys.forEach(key => {
+        if (key.textContent === '+' || key.textContent === '-' || key.textContent === '/' || key.textContent === '*') {
+            key.classList.remove('green')
+        } 
+    })
 }
 
 function resetButtons() {
