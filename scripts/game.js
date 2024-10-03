@@ -19,7 +19,8 @@ let gameState = {
             ],
             buttonsPressed: [],
             isComplete: false,
-            distance: null
+            distance: null,
+            wasStarted: false
         },
         {
             largeNumbers: 3,
@@ -31,7 +32,8 @@ let gameState = {
             ],
             buttonsPressed: [],
             isComplete: false,
-            distance: null
+            distance: null,
+            wasStarted: false
         },
         {
             largeNumbers: 1,
@@ -43,7 +45,8 @@ let gameState = {
             ],
             buttonsPressed: [],
             isComplete: false,
-            distance: null
+            distance: null,
+            wasStarted: false
         }
     ],
     puzzleNumber: 0,
@@ -56,7 +59,6 @@ let gameState = {
 let cumulativeData = []
 
 const FLIP_ANIMATION_DURATION = 500
-const DANCE_ANIMATION_DURATION = 500
 
 const keyboard = document.querySelector("[data-keyboard]")
 const targetElement = document.querySelector("[data-target]")
@@ -90,7 +92,8 @@ function resetGameState() {
                 ],
                 buttonsPressed: [],
                 isComplete: false,
-                distance: null
+                distance: null,
+                wasStarted: false
             },
             {
                 largeNumbers: 3,
@@ -102,7 +105,8 @@ function resetGameState() {
                 ],
                 buttonsPressed: [],
                 isComplete: false,
-                distance: null
+                distance: null,
+                wasStarted: false
             },
             {
                 largeNumbers: 1,
@@ -114,7 +118,8 @@ function resetGameState() {
                 ],
                 buttonsPressed: [],
                 isComplete: false,
-                distance: null
+                distance: null,
+                wasStarted: false
             }
         ],
         puzzleNumber: targetGameNumber,
@@ -148,7 +153,7 @@ function openGame() {
 }
 
 function startTimer() {
-console.log("Start Timer")
+    //console.log("Start Timer")
 
     if (timerStarted) return
 
@@ -222,10 +227,10 @@ function updateTimerDisplay(hasWon) {
 
         drawWinCircle()
     } else {
-        canvas.classList.add('no-display')
-        answerElement.classList.remove('no-display')
+        canvas.classList.remove('no-display')
+        answerElement.classList.add('no-display')
 
-        //answerText.textContent = currentSolution
+        drawLossCircle()
     }
 }
 
@@ -234,50 +239,13 @@ function enableTimerDisplay() {
     answerElement.classList.add('no-display')
 }
 
-function updateCumulativeData() {
-    let games = 0;
-    let wins = 0;
-
-    gameState.games.forEach(game => {
-        if (game.wasStarted) games += 1;
-        if (game.isWin) wins += 1;
-    })
-
-    let hasEntry = cumulativeDataHasEntry(gameState.gameNumber)
-    console.log("Has entry: " + hasEntry)
-
-    if (hasEntry === false) {
-        console.log("Pushing in new entry");
-
-        cumulativeData.push({
-            number: gameState.gameNumber,
-            games: games,
-            wins: wins
-        })
-
-        storeCumulativeData()
-    } else {
-        console.log("Updating old entry");
-
-        let entryIndex = getCumulativeDataEntryIndex(gameState.gameNumber);
-
-        cumulativeData[entryIndex] = {
-            number: gameState.gameNumber,
-            games: games,
-            wins: wins
-        }
-
-        storeCumulativeData()
-    }
-}
-
 function cumulativeDataHasEntry(gameNumber) {
     return cumulativeData.some(entry => {
         if (entry.number === gameNumber) {
-            console.log("Found an equal number")
+            //console.log("Found an equal number")
             return true;
         } else {
-            console.log("Found no equal number")
+            //console.log("Found no equal number")
             return false;
         }
     })
@@ -320,16 +288,12 @@ function loadPuzzleFromState(index) {
     } 
 
     let currentGame = gameState.games[gameState.currentGame]
+    updateTimerDisplay(parseFloat(currentGame.distance) == 0)
 
     applyButtonsPressedForCurrentPuzzle()
     restoreOperationButtons()
 
-    if (currentGame.isWin) {
-        currentGuess = currentGame.solution.split('')
-        checkGuess()
-    } else {
-        timerEnd()
-    }
+    showNext()
 }
 
 function loadPuzzle(index) {
@@ -337,11 +301,16 @@ function loadPuzzle(index) {
     gameState.currentGame = index
     storeGameStateData()
 
+    if (activeGame.wasStarted === false) {
+        activeGame.wasStarted = true;
+        storeGameStateData()
+    }
+
     updateExtraButtons()
     updateSums()
 
     // Load in target number
-    console.log("First: " + activeGame.numbers[0])
+    //console.log("First: " + activeGame.numbers[0])
     currentTarget = activeGame.numbers[0]
     targetElement.textContent = currentTarget
 
@@ -387,24 +356,42 @@ function generateNumbers(large) {
     return [firstRandomNumber, ...selectedLargeNumbers, ...selectedSmallNumbers];
 }
 
+function resetExtraButtons() {
+    const mediumKeys = keyboard.querySelectorAll('.key.medium');
+    mediumKeys.forEach((key, i) => {
+        if (i < 4) {
+            key.classList.remove('grey');
+            key.classList.add('white');
+
+            key.textContent = "";
+            key.onclick = null;
+        }
+    })
+}
+
 function updateExtraButtons() {
     // Update the 4 medium keys
-    const smallKeys = keyboard.querySelectorAll('.key.medium');
+    const mediumKeys = keyboard.querySelectorAll('.key.medium');
     const extraNumbers = activeGame.extraNumbers;
 
-    smallKeys.forEach((key, i) => {
+    mediumKeys.forEach((key, i) => {
         if (extraNumbers.length > i) {
-            key.classList.remove('grey')
-            key.classList.add('white')
+            if (key.classList.contains('white')) {
+                flipKey(key, extraNumbers[i])
+            } else {
+                key.classList.add('grey')
+                key.textContent = extraNumbers[i]
+                //console.log("Extra numbers of i: " + extraNumbers[i])
+                key.style.fontSize = getFontSizeFromDigits(extraNumbers[i].toString().length)
 
-            key.textContent = extraNumbers[i]
-
-            key.onclick = function () {
-                pressNumber(this);
+                key.onclick = function () {
+                    pressNumber(this);
+                }
             }
         } else if (i < 4) {
-            key.classList.remove('white');
-            key.classList.add('grey');
+            key.classList.remove('grey');
+            key.classList.remove('flip');
+            key.classList.add('white');
 
             key.textContent = "";
             key.onclick = null;
@@ -414,16 +401,24 @@ function updateExtraButtons() {
             }
         }
     })
+}
 
-    extraNumbers.forEach((number, i) => {
-        const key = smallKeys[i]
-        key.textContent = number
-    })
-    
+function getFontSizeFromDigits(digits) {
+    if (digits <= 3) {
+        //console.log(digits + " Getting font size: 1em")
+        return "1em";
+    } else if (digits < 9) {
+        let size = (digits - 3) * 0.08;
+        //console.log(digits + " Getting font size: " + (1 - size) + "em")
+        return (1 - size) + "em";
+    } else {
+        //console.log(digits + " Getting font size: 0.4em")
+        return "0.52em";
+    }
 }
 
 function updateSums() {
-    const sumsArray = sums.querySelectorAll('div');
+    const sumsArray = sums.querySelectorAll('.sum');
 
     sumsArray.forEach((sum, i) => {
         if (activeGame.sums.length > i) {
@@ -442,7 +437,7 @@ function updateSums() {
                 currentSum.push(result)
                 storeGameStateData()
 
-                console.log("i: " + i + " length - 1: " + (sumsArray.length - 1))
+                //console.log("i: " + i + " length - 1: " + (sumsArray.length - 1))
 
                 if (i === activeGame.sums.length - 1) {
                     completeSum()
@@ -461,14 +456,93 @@ function updateSums() {
 }
 
 function updateCurrentAnswer() {
+    let answerText = "N/A";
+
     if (activeGame.sums.length < 2) {
-        answerTextElement.textContent = "";
-        answerTextElement.style.setProperty('--color', 'grey')
+        answerTextElement.classList.add('hidden')
     } else {
         const lastLastSum = activeGame.sums[activeGame.sums.length - 2]
+        answerText = lastLastSum[4];
+        answerTextElement.classList.remove('hidden')
+    }
 
-        answerTextElement.textContent = lastLastSum[4];
-        answerTextElement.style.setProperty('--color', 'orange')
+    answerTextElement.textContent = answerText
+    activeGame.currentAnswer = (answerText != "N/A") ? answerText : null;
+    storeGameStateData()
+
+    checkCurrentAnswer()
+}
+
+function checkCurrentAnswer() {
+    const currentAnswer = activeGame.currentAnswer
+    if (currentAnswer === null) {
+        console.log("Current Answer was null: " + currentAnswer)
+        activeGame.distance = null;
+        storeGameStateData()
+        updateCumulativeData()
+        return;
+    }
+
+    const currentTarget = activeGame.numbers[0]
+    const difference = Math.abs(parseFloat(currentTarget) - parseFloat(currentAnswer))
+    console.log("Current answer of: " + currentAnswer + " with target of: " + currentTarget + " resulted in distance of: " + difference)
+
+    activeGame.distance = difference;
+    storeGameStateData()
+    updateCumulativeData()
+
+    if (difference === 0) {
+        win()
+    }
+}
+
+function win() {
+    stopTimer()
+    drawWinCircle()
+
+
+}
+
+function completeGame() {
+    
+}
+
+function findSolution() {
+    
+}
+
+function updateCumulativeData() {
+    let distances = [];
+
+    gameState.games.forEach(game => {
+        if (game.wasStarted) {
+            console.log("Distance was: " + game.distance)
+            distances.push(game.distance)
+        }
+    })
+
+    let hasEntry = cumulativeDataHasEntry(gameState.puzzleNumber)
+
+    if (hasEntry === false) {
+        console.log("Pushing in new entry");
+
+        cumulativeData.push({
+            number: gameState.puzzleNumber,
+            distances: distances
+        })
+
+        storeCumulativeData()
+    } else {
+        console.log("Updating old entry");
+
+        let entryIndex = getCumulativeDataEntryIndex(gameState.puzzleNumber);
+
+        cumulativeData[entryIndex] = {
+            number: gameState.puzzleNumber,
+            distances: distances
+        }
+
+        storeCumulativeData()
     }
 }
 
@@ -482,13 +556,13 @@ function calculateResult(number1, operation, number2) {
         result = (number1 + number2);
     } else if (operation === "-") {
         result = number1 - number2;
-    } else if (operation === "*") {
+    } else if (operation === "x") {
         result = number1 * number2;
     } else if (operation === "/") {
         result = number1 / number2;
     }
 
-    return (Number.isInteger(result)) ? result : result.toFixed(2);
+    return (Number.isInteger(result)) ? result : parseFloat(result.toFixed(2));
 }
 
 
@@ -511,9 +585,15 @@ function handleKeyPress(e) {
 }
 
 function pressBackspace() {
+    if (canInteract === false) return
+
     // Remove the last sum
     const lastSum = activeGame.sums[activeGame.sums.length - 1]
-    if (lastSum.length === 0) return;
+    if (lastSum.length === 0) {
+        let key = document.querySelector('[data-backspace]')
+        shakeKey(key)
+        return;
+    }
     else if (lastSum.length <= 3) {
         // Free up the last button
         let button = buttonsPressed.pop()
@@ -533,9 +613,11 @@ function pressBackspace() {
 
 function pressNumber(key) {
     if (canInteract === false) return;
-    console.log("expectedInput: " + expectedInput);
 
-    if (expectedInput != "number") return;
+    if (expectedInput != "number" || activeGame.sums.length >= 5) {
+        shakeKey(key)
+        return;
+    } 
 
     if (key.classList.contains('green')) return;
     key.classList.add('green');
@@ -558,9 +640,12 @@ function pressNumber(key) {
 
 function pressOperation(key) {
     if (canInteract === false) return;
-    console.log("expectedInput: " + expectedInput);
+    //console.log("expectedInput: " + expectedInput);
 
-    if (expectedInput != "operation") return;
+    if (expectedInput != "operation") {
+        shakeKey(key)
+        return;
+    }
 
     if (key.classList.contains('green')) return;
     key.classList.add('green');
@@ -579,7 +664,11 @@ function pressOperation(key) {
 
 function pressEquals() {
     if (canInteract === false) return;
-    if (expectedInput != "equals") return;
+    if (expectedInput != "equals") {
+        let key = document.querySelector('[data-equals]')
+        shakeKey(key)
+        return;
+    }
 
     const lastSum = activeGame.sums[activeGame.sums.length - 1]
 
@@ -607,7 +696,7 @@ function restoreOperationButtons() {
     const keys = keyboard.querySelectorAll('.key');
 
     keys.forEach(key => {
-        if (key.textContent === '+' || key.textContent === '-' || key.textContent === '/' || key.textContent === '*') {
+        if (key.textContent === '+' || key.textContent === '-' || key.textContent === '/' || key.textContent === 'x') {
             key.classList.remove('green')
         } 
     })
@@ -633,7 +722,11 @@ function pressClear() {
     let lastSum = activeGame.sums[lastSumIndex]
 
     if (lastSum.length === 0) {
-        if (activeGame.sums.length <= 1) return;
+        if (activeGame.sums.length <= 1) {
+            let key = document.querySelector('[data-clear]')
+            shakeKey(key)
+            return;
+        }
         activeGame.sums.pop();
     }
 
@@ -659,21 +752,11 @@ function pressClear() {
     updateSums()
 }
 
-function shakeKeys(keys) {
-    //const inputKeys = getAllInputKeys()
-
-    keys.forEach((key, i) => {
-        key.classList.add("shake")
-        key.addEventListener("animationend", () => {
-            key.classList.remove("shake")
-        }, { once: true })
-    });
-}
-
 function playNext() {
     enableTimerDisplay()
 
     resetButtons()
+    resetExtraButtons()
 
     const currentGameNumber = gameState.currentGame
     loadPuzzle(currentGameNumber + 1)
@@ -683,16 +766,63 @@ function playNext() {
 }
 
 function showNext() {
-    console.log("showing next")
+    console.log("Showing Next")
+
+    if (gameState.currentGame < 2) {
+        console.log("Less than 3")
+        nextButton.textContent = "Play Next"
+        nextButton.onclick = function () {
+            playNext()
+        }
+    } else {
+        console.log("More than 3")
+        nextButton.textContent = "See Stats"
+        nextButton.onclick = function () {
+            showPage("stats")
+        }
+
+        gameState.isComplete = true;
+        storeGameStateData();
+    }
+
     nextButton.classList.remove("hidden")
 }
 
 function hideNext() {
-    console.log("hiding next")
+    //console.log("hiding next")
     nextButton.classList.add("hidden")
 }
 
 function updateGameText() {
-    gameText.textContent = "Game" 
-    gameLettersText.textContent = (gameState.currentGame + 1) + " of 3"
+    gameText.textContent = "Game " + (gameState.currentGame + 1) + "/3"
+    //gameLettersText.textContent = (gameState.currentGame + 1) + " of 3"
+}
+
+function flipKey(key, newText) {
+    console.log("flip")
+
+    key.classList.add("flip")
+
+    key.addEventListener("transitionend", () => {
+        console.log("transitionend")
+        key.classList.remove("flip")
+        key.classList.remove('white')
+        key.classList.add('grey')
+
+        key.textContent = newText
+        key.style.fontSize = getFontSizeFromDigits(newText.toString().length)
+
+        key.onclick = function () {
+            pressNumber(this);
+        }
+
+        updateExtraButtons()
+    }, { once: true })
+}
+
+function shakeKey(key) {
+    key.classList.add("shake")
+    key.addEventListener("animationend", () => {
+        key.classList.remove("shake")
+    }, { once: true })
 }

@@ -114,7 +114,7 @@ function showPage(pageId, oldPage = null) {
     }
     else if (pageId === "stats") {
         updateBodyColor(false)
-        
+        updateAllStats();
         pauseTimer()
     } else if (pageId === "welcome") {
         updateBodyColor(false)
@@ -272,12 +272,18 @@ function processStats(cumulativeState) {
             streak: 0,
             gamesPlayed: 0,
             wins: 0,
+            threes: 0,
+            fours: 0,
+            tens: 0,
             gradeText: "N/A"
         },
         overall: {
             daysPlayed: cumulativeState.length,
             gamesPlayed: 0,
             wins: 0,
+            threes: 0,
+            fours: 0,
+            tens: 0,
             gradeText: "N/A"
         }
     }
@@ -304,22 +310,69 @@ function processStats(cumulativeState) {
         }
 
         if (i === (cumulativeState.length - 1)) {
-            result.today.gamesPlayed += entry.games;
-            result.today.wins += entry.wins;
+            result.today.gamesPlayed += entry.distances.length;
+            const evaluatedDistances = evaluateDistances(entry.distances)
+
+            result.today.wins += evaluatedDistances.zeros
+            result.today.threes += evaluatedDistances.threes
+            result.today.fours += evaluatedDistances.fours
+            result.today.tens += evaluatedDistances.tens
         }
 
-        result.overall.gamesPlayed += entry.games;
-        result.overall.wins += entry.wins;
+        result.overall.gamesPlayed += entry.distances.length;
+        const evaluatedDistances = evaluateDistances(entry.distances)
+
+        result.overall.wins += evaluatedDistances.zeros
+        result.overall.threes += evaluatedDistances.threes
+        result.overall.fours += evaluatedDistances.fours
+        result.overall.tens += evaluatedDistances.tens
     })
 
     if (result.today.gamesPlayed > 0) {
-        let grade = getGrade()
+        let grade = getGrade(
+            result.today.gamesPlayed,
+            result.today.wins,
+            result.today.threes,
+            result.today.fours,
+            result.today.tens
+        )
         result.today.gradeText = grade + "%"
     }
 
     if (result.overall.gamesPlayed > 0) {
-        let overallGrade = getGrade()
+        let overallGrade = getGrade(
+            result.overall.gamesPlayed,
+            result.overall.wins,
+            result.overall.threes,
+            result.overall.fours,
+            result.overall.tens
+        )
         result.overall.gradeText = overallGrade + "%"
+    }
+
+    return result;
+}
+
+function evaluateDistances(distances) {
+    // Initialize counters for each category
+    let result = {
+        zeros: 0,
+        threes: 0,
+        fours: 0,
+        tens: 0
+    };
+
+    // Loop through the array and increment counters based on the value
+    for (let distance of distances) {
+        if (distance === 0) {
+            result.zeros++;
+        } else if (distance > 0 && distance <= 3) {
+            result.threes++;
+        } else if (distance > 3 && distance <= 10) {
+            result.fours++;
+        } else if (distance > 10) {
+            result.tens++;
+        }
     }
 
     return result;
@@ -328,28 +381,34 @@ function processStats(cumulativeState) {
 function updateAllStats() {
     const results = processStats(cumulativeData)
 
-    updateStats(todaysStatisticGrid, results.today.streak, results.today.gamesPlayed, results.today.wins, results.today.hints, results.today.gradeText)
-    updateStats(overallStatisticGrid, results.overall.daysPlayed, results.overall.gamesPlayed, results.overall.wins, results.overall.hints, results.overall.gradeText)
+    updateStats(todaysStatisticGrid, results.today.streak, results.today.wins, results.today.threes, results.today.fours, results.today.tens, results.today.gradeText)
+    updateStats(overallStatisticGrid, results.overall.daysPlayed, results.overall.wins, results.overall.threes, results.overall.fours, results.overall.tens, results.overall.gradeText)
 }
 
-function updateStats(statsGrid, daysPlayed, games, wins, hintsUsed, grade) {
+function updateStats(statsGrid, daysPlayed, wins, threes, fours, tens, grade) {
     let statisticsArray = Array.from(statsGrid.querySelectorAll('.statistic'));
 
     const daysPlayedData = statisticsArray[0].querySelector('.statistic-data');
-    const gamesData = statisticsArray[1].querySelector('.statistic-data');
-    const winsData = statisticsArray[2].querySelector('.statistic-data');
-    const hintsData = statisticsArray[3].querySelector('.statistic-data');
-    const gradeData = statisticsArray[4].querySelector('.statistic-data');
+    const winsData = statisticsArray[1].querySelector('.statistic-data');
+    const threesData = statisticsArray[2].querySelector('.statistic-data');
+    const foursData = statisticsArray[3].querySelector('.statistic-data');
+    const tensData = statisticsArray[4].querySelector('.statistic-data');
+    const gradeData = statisticsArray[5].querySelector('.statistic-data');
 
     daysPlayedData.textContent = daysPlayed
-    gamesData.textContent = games
     winsData.textContent = wins
-    hintsData.textContent = hintsUsed
+    threesData.textContent = threes
+    foursData.textContent = fours
+    tensData.textContent = tens
     gradeData.textContent = grade
 }
 
-function getGrade() {
-    return 0;
+function getGrade(games, wins, threes, fours, tens) {
+    const maxScore = games * 5;
+    const currentScore = (wins * 5) + (threes * 3) + (fours * 1);
+    const grade = Math.round((currentScore / maxScore) * 100).toFixed(0);
+
+    return grade;
 }
 
 function pressShare() {
@@ -359,9 +418,16 @@ function pressShare() {
     }
 
     let lastEntry = cumulativeData[cumulativeData.length - 1]
-    let grade = getGrade()
+    const evaluatedDistances = evaluateDistances(lastEntry.distances)
+    let grade = getGrade(
+        lastEntry.distances.length,
+        evaluatedDistances.zeros,
+        evaluatedDistances.threes,
+        evaluatedDistances.fours,
+        evaluatedDistances.tens
+    )
 
-    let textToCopy = "Try Countdown! \nwww.independent.ie/countdown \n Puzzle: " + targetGame.number + " " + "\n" + " My score today: " + grade + "% \n" 
+    let textToCopy = "Try Countdown! \nwww.independent.ie/countdown \n Puzzle: " + targetGameNumber + " " + "\n" + " My score today: " + grade + "% \n" 
 
     if (navigator.share && detectTouchscreen() && ALLOW_MOBILE_SHARE) {
         navigator.share({

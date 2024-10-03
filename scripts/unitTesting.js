@@ -1,3 +1,5 @@
+runStatisticsTests()
+
 function deepEqual(obj1, obj2) {
     if (obj1 === obj2) return true;
 
@@ -31,94 +33,32 @@ function statisticsUnitTest(testName, cumulativeData, expectedResults) {
 
 function runStatisticsTests() {
     statisticsUnitTest(
-        'test-1',
+        "test1",
         [
-            { number: 54, games: 1, wins: 0, hints: 0, countedHints: 0 },
-            { number: 55, games: 3, wins: 1, hints: 1, countedHints: 1 }
+            { number: 68, distances: [100, 5, 0] },
+            {number: 69, distances: [904, 100, 0]}
         ],
         {
             today: {
                 streak: 2,
                 gamesPlayed: 3,
                 wins: 1,
-                hints: 1,
-                countedHints: 1,
-                gradeText: "30%"
+                threes: 0,
+                fours: 0,
+                tens: 2,
+                gradeText: "33.33%"
             },
             overall: {
                 daysPlayed: 2,
-                gamesPlayed: 4,
-                wins: 1,
-                hints: 1,
-                countedHints: 1,
-                gradeText: "23%"
+                gamesPlayed: 6,
+                wins: 2,
+                threes: 0,
+                fours: 1,
+                tens: 3,
+                gradeText: "N/A"
             }
         }
-    )
-
-    statisticsUnitTest(
-        'test-2',
-        [
-            { number: 20, games: 1, wins: 1, hints: 0, countedHints: 0 },
-            { number: 21, games: 2, wins: 2, hints: 1, countedHints: 1 },
-            { number: 22, games: 1, wins: 0, hints: 0, countedHints: 0 },
-            { number: 24, games: 3, wins: 1, hints: 1, countedHints: 1 }
-        ],
-        {
-            today: {
-                streak: 1,
-                gamesPlayed: 3,
-                wins: 1,
-                hints: 1,
-                countedHints: 1,
-                gradeText: "30%"
-            },
-            overall: {
-                daysPlayed: 4,
-                gamesPlayed: 7,
-                wins: 4,
-                hints: 2,
-                countedHints: 2,
-                gradeText: "54%" // 55?
-            }
-        }
-    )
-
-    statisticsUnitTest(
-        'test-3',
-        [
-            { number: 1, games: 1, wins: 1, hints: 0, countedHints: 0 },
-            { number: 2, games: 2, wins: 2, hints: 1, countedHints: 1 },
-            { number: 3, games: 1, wins: 0, hints: 0, countedHints: 0 },
-            { number: 4, games: 3, wins: 1, hints: 1, countedHints: 0 },
-            { number: 5, games: 1, wins: 1, hints: 0, countedHints: 0 },
-            { number: 6, games: 2, wins: 2, hints: 1, countedHints: 1 },
-            { number: 8, games: 1, wins: 0, hints: 0, countedHints: 0 },
-            { number: 9, games: 3, wins: 1, hints: 1, countedHints: 1 },
-            { number: 10, games: 1, wins: 1, hints: 0, countedHints: 0 },
-            { number: 11, games: 2, wins: 2, hints: 1, countedHints: 1 },
-            { number: 12, games: 1, wins: 0, hints: 0, countedHints: 0 },
-            { number: 13, games: 3, wins: 3, hints: 0, countedHints: 0 }
-        ],
-        {
-            today: {
-                streak: 6,
-                gamesPlayed: 3,
-                wins: 3,
-                hints: 0,
-                countedHints: 0,
-                gradeText: "100%"
-            },
-            overall: {
-                daysPlayed: 12,
-                gamesPlayed: 21,
-                wins: 14,
-                hints: 5,
-                countedHints: 4,
-                gradeText: "65%" // 64?
-            }
-        }
-    )
+    );
 }
 
 function timerUnitTest(testName, wordSize, expectedResult) {

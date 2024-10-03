@@ -41,6 +41,12 @@
     padding-left: 1em;
 }
 
+.delete-icon {
+    padding-top: .2em;
+    color: white;
+    height: 1.35em;
+}
+
 .icon {
     height: 1.25em;
     user-select: none;

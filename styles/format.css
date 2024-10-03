@@ -26,10 +26,11 @@
 :root {
     --change-color: #009982;
     --guess-color: #ABB7B7;
-    --win-color: #D2DB5C;
+    --win-color: #B8A4CF;
     --answer-color: #FF5933;
     --play-next-color: #00605C;
     --splash-screen-color: #F8FAE8;
+    --dark-button-color: #585858;
 }
 
 body {
@@ -75,8 +76,8 @@ html {
 
 .keyboard {
     display: grid;
-    grid-template-columns: repeat(18, minmax(auto, .75em));
-    grid-auto-rows: 1.5em;
+    grid-template-columns: repeat(12, minmax(auto, 1.3em));
+    grid-auto-rows: 2.25em;
     gap: .1em;
     justify-content: center;
 }
@@ -87,32 +88,47 @@ html {
 
 .white {
     background-color: white;
+    border: 1em;
+    border-color: var(--guess-color);
 }
 
 .key {
-    border-radius: 0.5em;
-    border-color: black;
-    grid-column: span 3;
+    padding-top: .2em;
+    font-weight: bold;
+    font-size: 1em;
+    border: none;
+    border-radius: 0.1em;
+    grid-column: span 2;
+    transition: transform 250ms;
 }
 
 .key.medium {
-    grid-column: span 4;
+    grid-column: span 3;
 }
 
 .key.large {
-    grid-column: span 6;
+    grid-column: span 4;
 }
 
 .key.white {
     background-color: white;
+    border: .1em solid;
+    border-color: var(--guess-color);
 }
 
 .key.grey {
-    background-color: grey;
+    background-color: var(--guess-color);
+}
+
+.key.dark {
+    background-color: var(--dark-button-color);
+    color: white;
+    font-weight: normal;
 }
 
 .key.green {
-    background-color: green;
+    background-color: var(--change-color);
+    color: black;
 }
 
 .off-white {
@@ -142,7 +158,22 @@ html {
 .box.sums {
     flex-direction: column;
     font-size: 0.75em;
-    line-height: 1em;
+    display: grid;
+    grid-template-columns: repeat(2, 12em);
+    grid-auto-rows: 1em;
+    gap: .1em;
+}
+
+.sum-divider {
+    width: .1em;
+    height: 1.8em;
+    border-radius: .1em;
+    margin-top: 2.8em;
+    background-color: var(--guess-color);
+}
+
+.sum {
+    grid-column: span 1;
 }
 
 .text-box-info {
@@ -187,7 +218,7 @@ html {
     animation: dance 500ms ease-in-out;
 }
 
-.tile.flip {
+.flip {
     transform: rotateX(90deg);
 }
 
@@ -296,4 +327,12 @@ html {
     justify-content: center;
     align-items: center;
     text-align: center;
+}
+
+.relative {
+    position: relative;
+}
+
+.absolute {
+    position: absolute;
 }

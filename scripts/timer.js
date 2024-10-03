@@ -95,5 +95,5 @@ function drawLossCircle() {
     ctx.font = 'bold 80px Arial';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText("You Win", centerX, centerY);
+    ctx.fillText("You Lost", centerX, centerY);
 }
