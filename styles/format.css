@@ -169,6 +169,7 @@ html {
     gap: .1em;
     text-align: center;
     border: dotted;
+    margin-top: 0.5em;
 }
 
 .box.sums.inline {
