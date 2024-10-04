@@ -223,8 +223,6 @@ function timerEnd() {
 }
 
 function updateTimerDisplay(hasWon) {
-    hasWon = false;
-
     if (hasWon) {
         canvas.classList.remove('no-display')
         answerElement.classList.add('no-display')
