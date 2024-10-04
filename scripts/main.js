@@ -1,25 +1,15 @@
 const DATE_OF_FIRST_PUZZLE = new Date(2024, 6, 25)
 const ALLOW_MOBILE_SHARE = true; 
 
-const DICTIONARY_7LETTER = "resources/Dictionary-7Letter.tsv";
-const DICTIONARY_8LETTER = "resources/Dictionary-8Letter.tsv";
-const DICTIONARY_9LETTER = "resources/Dictionary-9Letter.tsv";
-
-const targetWordsLength = 100
-
-const msOffset = Date.now() - DATE_OF_FIRST_PUZZLE
-const dayOffset = msOffset / 1000 / 60 / 60 / 24
-const targetIndex = Math.floor(dayOffset + 0) % targetWordsLength
-let targetGameNumber = targetIndex + 1
-let targetGame = {}
+let targetGameNumber = 0
 
 const alertContainer = document.querySelector("[data-alert-container]")
 const statsAlertContainer = document.querySelector("[data-stats-alert-container]")
 const shareButton = document.querySelector("[data-share-button]")
 const playButton = document.querySelector("[data-play-button]")
 
-const todaysStatisticGrid = document.querySelector("[data-statistics-today]");
-const overallStatisticGrid = document.querySelector("[data-statistics-overall]");
+const firstStatisticGrid = document.querySelector("[data-statistics-first]");
+const secondStatisticGrid = document.querySelector("[data-statistics-second]");
 
 let puzzleList = []
 
@@ -33,7 +23,7 @@ function fetchData() {
     const msOffset = Date.now() - DATE_OF_FIRST_PUZZLE
     const dayOffset = msOffset / 1000 / 60 / 60 / 24
     let targetIndex = Math.floor(dayOffset + 0)
-    targetGameNumber = targetIndex
+    targetGameNumber = targetIndex + 1
 
     fetchCumulativeData()
     fetchGameState()
@@ -136,7 +126,7 @@ function updateBodyColor(isWhite) {
 }
 
 function startInteraction() {
-    document, addEventListener("keydown", handleKeyPress)
+    document.addEventListener("keydown", handleKeyPress)
 
     canInteract = true
 
@@ -246,11 +236,11 @@ function generateWelcomeMessage() {
     const formattedToday = months[mm] + " " + dd + ", " + yyyy
     welcomeDate.textContent = formattedToday
 
-    welcomeNumber.textContent = "No. " + (targetIndex + 1)
+    welcomeNumber.textContent = "No. " + (targetGameNumber)
 }
 
 function updateInfoPage() {
-    drawWelcomeCircle(27/30, "00:27")
+    //drawWelcomeCircle(27/30, "00:27")
 
     if (gameState.games[0].wasStarted === false) {
         playButton.textContent = "Play"
@@ -284,7 +274,8 @@ function processStats(cumulativeState) {
             threes: 0,
             fours: 0,
             tens: 0,
-            gradeText: "N/A"
+            gradeText: "N/A",
+            down: null
         }
     }
 
@@ -350,6 +341,22 @@ function processStats(cumulativeState) {
         result.overall.gradeText = overallGrade + "%"
     }
 
+    if (result.overall.daysPlayed > 2) {
+        const last = cumulativeState[cumulativeState.length - 1]
+        const previous = cumulativeState[cumulativeState.length - 2]
+        console.log("State more than 2: " + last.grade)
+
+        const grade = parseFloat(last.grade) - parseFloat(previous.grade)
+
+        result.overall.down = (Number.isInteger(grade)) ? grade.toFixed(0) : grade.toFixed(2)
+    } else if (result.overall.daysPlayed === 1) {
+        console.log("State is 1")
+        result.overall.down = -1
+    } else {
+        console.log("State is 0")
+        result.overall.down = null
+    }
+
     return result;
 }
 
@@ -381,19 +388,21 @@ function evaluateDistances(distances) {
 function updateAllStats() {
     const results = processStats(cumulativeData)
 
-    updateStats(todaysStatisticGrid, results.today.streak, results.today.wins, results.today.threes, results.today.fours, results.today.tens, results.today.gradeText)
-    updateStats(overallStatisticGrid, results.overall.daysPlayed, results.overall.wins, results.overall.threes, results.overall.fours, results.overall.tens, results.overall.gradeText)
+    //updateStats(todaysStatisticGrid, results.today.streak, results.today.wins, results.today.threes, results.today.fours, results.today.tens, results.today.gradeText)
+    updateStats(results.overall.daysPlayed, results.overall.wins, results.overall.threes, results.overall.fours, results.overall.tens, results.overall.gradeText, results.overall.down)
 }
 
-function updateStats(statsGrid, daysPlayed, wins, threes, fours, tens, grade) {
-    let statisticsArray = Array.from(statsGrid.querySelectorAll('.statistic'));
+function updateStats(daysPlayed, wins, threes, fours, tens, grade, down) {
+    let firstStatisticsArray = Array.from(firstStatisticGrid.querySelectorAll('.statistic'));
+    let secondStatisticsArray = Array.from(secondStatisticGrid.querySelectorAll('.statistic'));
 
-    const daysPlayedData = statisticsArray[0].querySelector('.statistic-data');
-    const winsData = statisticsArray[1].querySelector('.statistic-data');
-    const threesData = statisticsArray[2].querySelector('.statistic-data');
-    const foursData = statisticsArray[3].querySelector('.statistic-data');
-    const tensData = statisticsArray[4].querySelector('.statistic-data');
-    const gradeData = statisticsArray[5].querySelector('.statistic-data');
+    const daysPlayedData = firstStatisticsArray[0].querySelector('.statistic-data');
+    const winsData = firstStatisticsArray[1].querySelector('.statistic-data');
+    const threesData = secondStatisticsArray[0].querySelector('.statistic-data');
+    const foursData = secondStatisticsArray[1].querySelector('.statistic-data');
+    const tensData = secondStatisticsArray[2].querySelector('.statistic-data');
+    const gradeData = secondStatisticsArray[3].querySelector('.statistic-data');
+    const downData = document.querySelector('[data-stat-down]')
 
     daysPlayedData.textContent = daysPlayed
     winsData.textContent = wins
@@ -401,6 +410,22 @@ function updateStats(statsGrid, daysPlayed, wins, threes, fours, tens, grade) {
     foursData.textContent = fours
     tensData.textContent = tens
     gradeData.textContent = grade
+
+    console.log("Down is: " + down)
+
+    if (down === null) {
+        downData.textContent = "Play today's game to earn a grade!"
+    } else if (down > 0) {
+        downData.textContent = "Up " + down + "% vs. last play!"
+    } else if (down == 0) {
+        downData.textContent = "Same as last play!"
+    } else if (down == -1) {
+        downData.textContent = "Play multiple days to see your improvement!"
+    } else {
+        downData.textContent = "Down " + Math.abs(down) + "% vs. last play!"
+    }
+
+    
 }
 
 function getGrade(games, wins, threes, fours, tens) {

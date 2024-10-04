@@ -18,7 +18,7 @@
             <div class="alert-container" data-alert-container></div>
             <div class="header">
                 <div>
-                    <img src="resources/Conundrum horizontal.svg" class="conundrum-horizontal-icon">
+                    <img src="resources/Conundrum horizontal.svg" class="countdown-horizontal-icon">
                 </div>
                 <div>
                     <a onclick="showPage('info')">
@@ -61,7 +61,7 @@
             </div>
             <div class="sum-divider centered absolute"></div>
         </div>
-        <div class="centered" style="--amount: .6em">
+        <div class="centered" style="--amount: 1em">
             <div class="box sums"  data-sums>
                 <div class="sum">175 &emsp; + &emsp; 15 &emsp; = &emsp; 190</div>
                 <div class="sum">175 &emsp; + &emsp; 15 &emsp; = &emsp; 190</div>
@@ -75,7 +75,7 @@
             </div>
         </div>
         <div class="centered">
-            <div class="text-game-answer" style="--color: orange" data-answer>350</div>
+            <div class="text-game-answer" data-answer>350</div>
         </div>
         <div class="keyboard gap" style="--amount: 1em" data-keyboard>
             <button class="key small grey">75</button>
@@ -102,11 +102,11 @@
             </button>
         </div>
         <div>
-            <div class="centered gap" style="--amount: 1em">
-                <button class="button play-again" data-next>Play Next</button>
+            <div class="centered gap">
+                <button class="button play-again gap under" style="--amount: 1.7125em" data-next>Play Next</button>
             </div>
         </div>
-        <div class="centered gap"  style="--amount: 0.75em">
+        <div class="centered gap"  style="--amount: 0.5em">
             <div class="text-game-number" data-game-text>Game</div>
         </div>
         <div class="centered text-game-letters">
@@ -127,13 +127,6 @@
                 Use any combination of six numbers to reach <br> the target number.
             </div>
         </div>
-        <div class="centered gap" style="--amount: 1em;">
-            <canvas class="" id="infoCanvas" width="400" height="400" style="width: 6em; height: 6em;"></canvas>
-            <div class="no-display" style="height: 6em;" data-answer-element>
-                <div class="text-game-answer">Answer:</div>
-                <div class="text-game-solution" data-answer-text>Example</div>
-            </div>
-        </div>
         <div class="centered">
             <div class="text-box-info heading gap centered" style="--amount: 1.1em">
                 Tile Colours
@@ -141,7 +134,7 @@
         </div>
         <div class="centered">
             <div class="text-box-info gap centered" style="--amount: .2em">
-                Each of the six numbers in white <br>can be used only once. The Colour of the tiles change to green when used.
+                Each of the six numbers in white <br>can be used only once. The colour of the tiles change to green when used.
                 The tiles on the second row, are the results of your calculations. These can also be used to get the answer.
             </div>
         </div>
@@ -155,65 +148,30 @@
                 After three daily rounds, <br>you receive a grading depending on how <br>close you are to the answer each time.
             </div>
         </div>
-        <div class="centered gap" style="--amount: 0.8em">
+        <div class="centered gap" style="--amount: 5.5em">
             <button class="button play" data-play-button>
                 Play
             </button>
         </div>
     </div>
     <div id="stats" class="page">
-        <div>
+        <div class="centered gap" style="--amount: 1em">
             <div class="alert-container" data-stats-alert-container></div>
             <div class="header">
-                <div>
-                    <img src="resources/Conundrum horizontal.svg" class="conundrum-horizontal-icon">
-                </div>
-                <div>
-                    <a onclick="showPage('info')">
-                        <img src="resources/info-icon.svg" class="icon">
-                    </a>
-                </div>
-                <div>
+                <div class="box right">
                     <a onclick="showPage('game')">
                         <img src="resources/x-symbol.svg" class="icon">
                     </a>
                 </div>
             </div>
-            <div class="underline"></div>
         </div>
-        <div class="text-stats-heading gap" style="--amount: 1.2em">
-            Your Statistics Today
+        <div class="centered gap" style="--amount: 1em">
+            <img src="resources/Conundrum vertical.svg" class="welcome-header" alt="">
         </div>
-        <div class="stats-grid" data-statistics-today>
-            <div class="statistic">
-                <h4 class="statistic-data">0</h4>
-                <p class="statistic-label">Current Streak</p>
-            </div>
-            <div class="statistic">
-                <h4 class="statistic-data">0</h4>
-                <p class="statistic-label">Win</p>
-            </div>
-            <div class="statistic">
-                <h4 class="statistic-data">0</h4>
-                <p class="statistic-label">1 to 3</p>
-            </div>
-            <div class="statistic">
-                <h4 class="statistic-data">0</h4>
-                <p class="statistic-label">4 to 10</p>
-            </div>
-            <div class="statistic">
-                <h4 class="statistic-data">0</h4>
-                <p class="statistic-label">> 10</p>
-            </div>
-            <div class="statistic large">
-                <h4 class="statistic-data">N/A</h4>
-                <p class="statistic-label text-stats-grade">Today's Grade</p>
-            </div>
+        <div class="text-stats-heading gap centered" style="--amount: 3em">
+            Your Statistics
         </div>
-        <div class="text-stats-heading gap" style="--amount: 1.2em">
-            Your Overall Statistics
-        </div>
-        <div class="stats-grid" data-statistics-overall>
+        <div class="stats-grid-small" data-statistics-first>
             <div class="statistic">
                 <h4 class="statistic-data">0</h4>
                 <p class="statistic-label">Played</p>
@@ -222,6 +180,11 @@
                 <h4 class="statistic-data">0</h4>
                 <p class="statistic-label">Win</p>
             </div>
+        </div>
+        <div class="text-stats-heading-2 gap centered" style="--amount: 2.5em">
+            Your answer was within:
+        </div>
+        <div class="stats-grid-large" data-statistics-second>
             <div class="statistic">
                 <h4 class="statistic-data">0</h4>
                 <p class="statistic-label">1 to 3</p>
@@ -236,11 +199,13 @@
             </div>
             <div class="statistic large">
                 <h4 class="statistic-data">N/A</h4>
-                <p class="statistic-label text-stats-grade">Overall Grade</p>
+                <p class="statistic-label text-stats-grade">Your Grade</p>
             </div>
         </div>
-        
-        <div class="centered gap" style="--amount: 6em">
+        <div class="text-stats-heading-2 gap centered" style="--amount: 1.5em" data-stat-down>
+            Down 10% from last play
+        </div>
+        <div class="centered gap" style="--amount: 2.25em">
             <button class="button share" onclick="pressShare()" data-share-button>
                 Share
             </button>
@@ -264,7 +229,7 @@
         <div class="text-welcome-date gap centered" style="--amount: 1.25em" data-welcome-date>
             None
         </div>
-        <div class="text-welcome-puzzle centered" data-welcome-number style="visibility: hidden;">
+        <div class="text-welcome-date centered gap" data-welcome-number style="--amount: .25em">
             None
         </div>
     </div>

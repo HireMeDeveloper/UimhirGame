@@ -35,8 +35,8 @@ function runStatisticsTests() {
     statisticsUnitTest(
         "test1",
         [
-            { number: 68, distances: [100, 5, 0] },
-            {number: 69, distances: [904, 100, 0]}
+            { number: 68, distances: [100, 5, 0], grade: 50 },
+            { number: 69, distances: [904, 100, 0], grade: 60 }
         ],
         {
             today: {

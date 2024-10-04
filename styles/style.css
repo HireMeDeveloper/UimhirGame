@@ -15,7 +15,6 @@
 }
 
 .solution {
-    background-color: #FF5933;
     border-radius: 1em;
     height: 8em;
     width: 12em;
@@ -47,7 +46,7 @@
     background: skyblue;
 }
 
-.conundrum-horizontal-icon {
+.countdown-horizontal-icon {
     height: 1.25em;
     padding-left: 1em;
 }
@@ -118,6 +117,8 @@ button.hint.changed {
 }
 
 .button.play-again {
+    background-color: var(--change-color);
+    color: white;
     width: 9em;
 }
 
@@ -207,7 +208,7 @@ button.hint.changed {
 }
 
 .statistic.large {
-    grid-column: span 5;
+    grid-column: span 3;
 }
 
 .statistic-data {
@@ -219,12 +220,23 @@ button.hint.changed {
     font-size: .65em;
 }
 
-.stats-grid {
+.stats-grid-small {
     display: grid;
     justify-content: center;
     align-content: center;
-    grid-template-columns: repeat(5, 3em);
-    grid-template-rows: repeat(2, 4.25em);
+    grid-template-columns: repeat(2, 3em);
+    grid-template-rows: repeat(1, 3em);
+    gap: .5em;
+    margin-bottom: 1em;
+    margin-top: -.5em;
+}
+
+.stats-grid-large {
+    display: grid;
+    justify-content: center;
+    align-content: center;
+    grid-template-columns: repeat(3, 3em);
+    grid-template-rows: repeat(2, 3em);
     gap: .5em;
     margin-bottom: 1em;
     margin-top: -.5em;

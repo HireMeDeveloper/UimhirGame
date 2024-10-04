@@ -1,6 +1,8 @@
 let gameHasStarted = false
 let timerStarted = false
 
+let footerVisible = false
+
 let currentTarget
 let activeGame
 
@@ -296,6 +298,32 @@ function loadPuzzleFromState(index) {
     showNext()
 }
 
+function removeAllFlip() {
+    const mediumKeys = keyboard.querySelectorAll('.key.medium');
+    const extraNumbers = activeGame.extraNumbers;
+
+    mediumKeys.forEach((key, i) => {
+        if (extraNumbers.length > i) {
+            key.classList.add('grey')
+            key.textContent = extraNumbers[i]
+            key.style.fontSize = getFontSizeFromDigits(extraNumbers[i].toString().length)
+
+            console.log("FOUND A EXTRA AT INDEX: " + i)
+
+            key.onclick = function () {
+                pressNumber(this);
+            }
+        } else if (i < 4) {
+            key.classList.remove('grey');
+            key.classList.remove('flip');
+            key.classList.add('white');
+
+            key.textContent = "";
+            key.onclick = null;
+        }
+    })
+}
+
 function loadPuzzle(index) {
     activeGame = gameState.games[index]
     gameState.currentGame = index
@@ -310,6 +338,8 @@ function loadPuzzle(index) {
     updateSums()
 
     calculateSolution(activeGame.numbers)
+
+    if (activeGame.isComplete === false) answerTextElement.classList.remove('win')
 
     // Load in target number
     //console.log("First: " + activeGame.numbers[0])
@@ -519,6 +549,8 @@ function win() {
     stopTimer()
     drawWinCircle()
 
+    answerTextElement.classList.add('win')
+
     activeGame.isComplete = true
     storeGameStateData()
 
@@ -535,6 +567,7 @@ function findSolution() {
 
 function updateCumulativeData() {
     let distances = [];
+    let grade = "N/A";
 
     gameState.games.forEach(game => {
         if (game.wasStarted) {
@@ -543,6 +576,17 @@ function updateCumulativeData() {
         }
     })
 
+    if (distances.length > 0) {
+        const evaluatedDistances = evaluateDistances(distances)
+        grade = getGrade(
+            distances.length,
+            evaluatedDistances.zeros,
+            evaluatedDistances.threes,
+            evaluatedDistances.fours,
+            evaluatedDistances.tens
+        )
+    }
+
     let hasEntry = cumulativeDataHasEntry(gameState.puzzleNumber)
 
     if (hasEntry === false) {
@@ -550,7 +594,8 @@ function updateCumulativeData() {
 
         cumulativeData.push({
             number: gameState.puzzleNumber,
-            distances: distances
+            distances: distances,
+            grade: grade
         })
 
         storeCumulativeData()
@@ -561,7 +606,8 @@ function updateCumulativeData() {
 
         cumulativeData[entryIndex] = {
             number: gameState.puzzleNumber,
-            distances: distances
+            distances: distances,
+            grade: grade
         }
 
         storeCumulativeData()
@@ -587,8 +633,12 @@ function calculateResult(number1, operation, number2) {
     return (Number.isInteger(result)) ? result : parseFloat(result.toFixed(2));
 }
 
-
 function handleKeyPress(e) {
+    if (e.key === "t" || e.key === "T") {
+        //setFooterVisible(!footerVisible);
+        return
+    }
+
     if (canInteract) {
         if (e.key === "Delete") {
             pressClear()
@@ -807,12 +857,49 @@ function showNext() {
         storeGameStateData();
     }
 
-    nextButton.classList.remove("hidden")
+    setFooterVisible(true)
 }
+
+function setFooterVisible(isVisible) {
+    const mediumKeys = keyboard.querySelectorAll('.key.medium');
+    const largeKeys = keyboard.querySelectorAll('.key.large');
+
+    if (isVisible) {
+        nextButton.classList.remove("no-display")
+        
+        mediumKeys.forEach((key, i) => {
+            if (i >= 4) {
+                key.classList.add('grid-hidden')
+            }
+        })
+
+        largeKeys.forEach((key, i) => {
+            key.classList.add('grid-hidden')
+        })
+    } else {
+        nextButton.classList.add("no-display")
+
+        mediumKeys.forEach((key, i) => {
+            if (i >= 4) {
+                key.classList.remove('grid-hidden')
+            }
+        })
+
+        largeKeys.forEach((key, i) => {
+            key.classList.remove('grid-hidden')
+        })
+    }
+
+    footerVisible = isVisible
+}
+
+
 
 function hideNext() {
     //console.log("hiding next")
-    nextButton.classList.add("hidden")
+    //nextButton.classList.add("no-display")
+
+    setFooterVisible(false)
 }
 
 function updateGameText() {
