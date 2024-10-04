@@ -93,7 +93,6 @@ html {
 }
 
 .key {
-    padding-top: .2em;
     font-weight: bold;
     font-size: 1em;
     border: none;
@@ -101,7 +100,10 @@ html {
     grid-column: span 2;
     transition: transform 250ms;
     color: black;
+    display: flex;
     text-align: center;
+    justify-content: center;
+    align-items: center;
 }
 
 .key.medium {
