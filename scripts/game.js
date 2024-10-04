@@ -372,7 +372,7 @@ function generateNumbers(large) {
     const selectedSmallNumbers = shuffledSmallNumbers.slice(0, 6 - large);
 
     // Combine the random number, large and small numbers
-    return [firstRandomNumber, ...selectedLargeNumbers, ...selectedSmallNumbers];
+    return [firstRandomNumber, ...selectedLargeNumbers, ...selectedSmallNumbers].sort((a, b) => b - a);
 }
 
 function resetExtraButtons() {
@@ -908,6 +908,14 @@ function findClosestSolution(numbers) {
                     if (result === null) return; // Skip invalid operations (e.g., division by zero)
 
                     let newHistory = [...history, [num1, op, num2, '=', result]];
+
+                    // Compare current result with closestDifference
+                    let diff = Math.abs(result - target);
+                    if (diff < closestDifference) {
+                        closestDifference = diff;
+                        closestSolution = result;
+                        bestSums = newHistory;
+                    }
 
                     // Recur with the result added as a new number, and increase depth
                     calculateSums([result, ...remaining], newHistory, depth + 1, [...results, result]);
