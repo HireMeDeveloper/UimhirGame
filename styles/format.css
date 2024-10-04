@@ -167,6 +167,7 @@ html {
     grid-auto-rows: 1em;
     gap: .1em;
     text-align: center;
+    border: dotted;
 }
 
 .box.sums.inline {
