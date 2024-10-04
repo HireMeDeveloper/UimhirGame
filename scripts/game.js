@@ -69,8 +69,9 @@ const nextButton = document.querySelector("[data-next]")
 const gameText = document.querySelector("[data-game-text]")
 const gameLettersText = document.querySelector("[data-game-letters]")
 const answerElement = document.querySelector("[data-answer-element]")
-const answerText = document.querySelector("[data-answer-text]")
 const canvas = document.getElementById('circleCanvas');
+const solutionSumParent = document.querySelector('[data-solution-sums]')
+const solutionText = document.querySelector('[data-solution-text]')
 
 let currentTimerTime = 0
 let currentTimerMax = 0
@@ -180,6 +181,7 @@ function pauseTimer() {
 
 function unpauseTimer() {
     if (currentTimerTime === 0) return;
+    if (activeGame.isComplete == true) return;
     timerStarted = true
 
     updateTimer(currentTimerTime, currentTimerMax)
@@ -221,16 +223,16 @@ function timerEnd() {
 }
 
 function updateTimerDisplay(hasWon) {
+    hasWon = false;
+
     if (hasWon) {
         canvas.classList.remove('no-display')
         answerElement.classList.add('no-display')
 
         drawWinCircle()
     } else {
-        canvas.classList.remove('no-display')
-        answerElement.classList.add('no-display')
-
-        drawLossCircle()
+        canvas.classList.add('no-display')
+        answerElement.classList.remove('no-display')
     }
 }
 
@@ -309,6 +311,8 @@ function loadPuzzle(index) {
     updateExtraButtons()
     updateSums()
 
+    calculateSolution(activeGame.numbers)
+
     // Load in target number
     //console.log("First: " + activeGame.numbers[0])
     currentTarget = activeGame.numbers[0]
@@ -325,6 +329,23 @@ function loadPuzzle(index) {
     })
 
     updateGameText()
+}
+
+function calculateSolution(numbers) {
+    const solutionSums = solutionSumParent.querySelectorAll('.sum')
+    let solution = findClosestSolution(numbers)
+
+    solutionSums.forEach((sum, i) => {
+        if (solution.sums.length > i) {
+            const currentSum = solution.sums[i]
+
+            sum.textContent = currentSum[0] + " " + currentSum[1] + " " + currentSum[2] + " " + currentSum[3] + " " + currentSum[4]
+        } else {
+            sum.textContent = ""
+        }
+    })
+
+    solutionText.textContent = (solution.closestSolution === solution.target) ? "Exact Solution" : "Closest Solution"
 }
 
 function generateNumbers(large) {
@@ -500,7 +521,10 @@ function win() {
     stopTimer()
     drawWinCircle()
 
+    activeGame.isComplete = true
+    storeGameStateData()
 
+    stopInteraction()
 }
 
 function completeGame() {
@@ -825,4 +849,95 @@ function shakeKey(key) {
     key.addEventListener("animationend", () => {
         key.classList.remove("shake")
     }, { once: true })
+}
+
+function findClosestSolution(numbers) {
+    const target = numbers[0]; // The first number is the target
+    let candidates = numbers.slice(1); // Remaining 6 numbers
+    let closestSolution = null;
+    let closestDifference = Infinity;
+    let bestSums = [];
+    const MAX_SUMS = 4; // Limit to 4 sums
+
+    function applyOperation(a, op, b) {
+        let result = null;
+        switch (op) {
+            case '+':
+                result = a + b;
+                break;
+            case '-':
+                result = a - b;
+                break;
+            case '*':
+                result = a * b;
+                break;
+            case '/':
+                result = (b !== 0) ? a / b : null;
+                break;
+            default:
+                result = null;
+        }
+
+        if (result === null) return null;
+        return (Number.isInteger(result)) ? result : parseFloat(result).toFixed(2);
+    }
+
+    function calculateSums(nums, history = [], depth = 0, results = []) {
+        // If we've reached the maximum number of sums, stop recursion
+        if (depth >= MAX_SUMS) {
+            if (nums.length === 1) {
+                let result = nums[0];
+                let diff = Math.abs(result - target);
+                if (diff < closestDifference) {
+                    closestDifference = diff;
+                    closestSolution = result;
+                    bestSums = history;
+                }
+            }
+            return;
+        }
+
+        // Try every pair of numbers with every operation
+        for (let i = 0; i < nums.length; i++) {
+            for (let j = i + 1; j < nums.length; j++) {
+                let num1 = nums[i], num2 = nums[j];
+
+                // Remove num1 and num2 from nums for the recursive call
+                let remaining = nums.filter((_, idx) => idx !== i && idx !== j);
+
+                ['+', '-', '*', '/'].forEach(op => {
+                    let result = applyOperation(num1, op, num2);
+                    if (result === null) return; // Skip invalid operations (e.g., division by zero)
+
+                    let newHistory = [...history, [num1, op, num2, '=', result]];
+
+                    // Recur with the result added as a new number, and increase depth
+                    calculateSums([result, ...remaining], newHistory, depth + 1, [...results, result]);
+
+                    // Recur ignoring the result, keeping the unused numbers, but also increasing depth
+                    calculateSums(remaining, history, depth + 1, results);
+                });
+            }
+        }
+
+        // Also consider previously generated results at the current depth
+        for (let res of results) {
+            calculateSums([res, ...nums], history, depth + 1, results);
+        }
+    }
+
+    // Start the recursive search
+    calculateSums(candidates);
+
+    // Filter for only the valid sums
+    bestSums = bestSums.filter(([, , , , result]) =>
+        result === closestSolution || bestSums.some((sum) => sum[0] === result || sum[2] === result)
+    );
+
+    // Return the closest solution and the steps (sums)
+    return {
+        closestSolution: closestSolution,
+        sums: bestSums,
+        target: target
+    };
 }

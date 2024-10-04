@@ -75,3 +75,34 @@ function runTimerUnitTests() {
     timerUnitTest("test 2", 8, 4000)
     timerUnitTest("test 3", 9, 5000)
 }
+
+runSolutionsTests()
+
+function solutionUnitTest(testName, numbers, expectedResults) {
+    let results = findClosestSolution(numbers)
+    if (deepEqual(expectedResults, results)) {
+        console.log("TEST (" + testName + "): PASSED");
+    } else {
+        console.log("TEST (" + testName + "): FAILED");
+        console.log("Expected: " + JSON.stringify(expectedResults, null, 2) + " \nActual: " + JSON.stringify(results, null, 2));
+    }
+}
+
+function runSolutionsTests() {
+    solutionUnitTest(
+        "solutionTest1",
+        [
+            755, 100, 50, 25, 9, 4, 1
+        ],
+        {
+            closestSolution: 188,
+            sums: [
+                [100, '+', 50, '=', 150],
+                [150, '+', 25, '=', 175],
+                [175, '+', 9, '=', 184],
+                [184, '+', 4, '=', 188]
+            ],
+            target: 755
+        }
+    )
+}

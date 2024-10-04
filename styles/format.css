@@ -162,6 +162,11 @@ html {
     grid-template-columns: repeat(2, 12em);
     grid-auto-rows: 1em;
     gap: .1em;
+    text-align: center;
+}
+
+.box.sums.inline {
+    display: flex;
 }
 
 .sum-divider {
