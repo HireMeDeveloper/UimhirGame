@@ -101,6 +101,7 @@ html {
     grid-column: span 2;
     transition: transform 250ms;
     color: black;
+    text-align: center;
 }
 
 .key.medium {
