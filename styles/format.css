@@ -165,6 +165,7 @@ html {
     display: grid;
     grid-template-columns: repeat(2, 12em);
     grid-auto-rows: 1em;
+    line-height: 1em;
     gap: .1em;
     text-align: center;
     border: dotted;
