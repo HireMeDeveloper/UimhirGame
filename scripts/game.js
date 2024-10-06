@@ -295,6 +295,8 @@ function loadPuzzleFromState(index) {
     applyButtonsPressedForCurrentPuzzle()
     restoreOperationButtons()
 
+    removeAllFlip()
+
     showNext()
 }
 
