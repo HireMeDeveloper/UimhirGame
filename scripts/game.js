@@ -144,7 +144,7 @@ function openGame() {
 
     if (gameState.hasOpenedPuzzle === false) {
         startTimer()
-        fireEvent("start-first-game")
+        fireEvent("onGameStart")
         gameState.hasOpenedPuzzle = true;
         storeGameStateData()
     } else {
@@ -847,16 +847,21 @@ function showNext() {
         nextButton.textContent = "Play Next"
         nextButton.onclick = function () {
             playNext()
+            fireEvent("playNextGame")
         }
     } else {
         console.log("More than 3")
         nextButton.textContent = "See Stats"
         nextButton.onclick = function () {
             showPage("stats")
+            fireEvent("gameThreeToStats")
         }
 
-        gameState.isComplete = true;
-        storeGameStateData();
+        if (gameState.isComplete === false) {
+            fireEvent("onFirstCompletion")
+            gameState.isComplete = true;
+            storeGameStateData()
+        }
     }
 
     setFooterVisible(true)

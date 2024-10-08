@@ -209,7 +209,7 @@ function generateWelcomeMessage() {
         welcomeButton.textContent = "Continue"
         welcomeButton.onclick = () => {
             showPage('game')
-            fireEvent("continue-game")
+            fireEvent("continueGame")
         }
     } else {
         welcomeHeader.textContent = "Hello"
@@ -218,7 +218,7 @@ function generateWelcomeMessage() {
         welcomeButton.textContent = "See Stats"
         welcomeButton.onclick = () => {
             showPage('stats')
-            fireEvent("from-welcome-to-stats")
+            fireEvent("fromWelcomeToStats")
         }
     }
 
@@ -246,7 +246,7 @@ function updateInfoPage() {
         playButton.textContent = "Play"
         playButton.onclick = function () {
             showPage("game")
-            fireEvent("play-game")
+            fireEvent("playGame")
         } 
     } else {
         playButton.textContent = "Continue"
@@ -257,6 +257,8 @@ function updateInfoPage() {
 }
 
 function processStats(cumulativeState) {
+    let overallGrade = null
+
     let result = {
         today: {
             streak: 0,
@@ -331,7 +333,7 @@ function processStats(cumulativeState) {
     }
 
     if (result.overall.gamesPlayed > 0) {
-        let overallGrade = getGrade(
+        overallGrade = getGrade(
             result.overall.gamesPlayed,
             result.overall.wins,
             result.overall.threes,
@@ -341,14 +343,26 @@ function processStats(cumulativeState) {
         result.overall.gradeText = overallGrade + "%"
     }
 
-    if (result.overall.daysPlayed > 2) {
+    //if (result.overall.daysPlayed > 2) {
+    //    const last = cumulativeState[cumulativeState.length - 1]
+    //    const previous = cumulativeState[cumulativeState.length - 2]
+    //    console.log("State more than 2: " + last.grade)
+    //    const grade = parseFloat(last.grade) - parseFloat(previous.grade)
+    //    result.overall.down = (Number.isInteger(grade)) ? grade.toFixed(0) : grade.toFixed(2)
+    //} else if (result.overall.daysPlayed === 1) {
+    //    console.log("State is 1")
+    //    result.overall.down = -1
+    //} else {
+    //    console.log("State is 0")
+    //    result.overall.down = null
+    //}
+
+    if (result.overall.daysPlayed > 1) {
         const last = cumulativeState[cumulativeState.length - 1]
-        const previous = cumulativeState[cumulativeState.length - 2]
-        console.log("State more than 2: " + last.grade)
 
-        const grade = parseFloat(last.grade) - parseFloat(previous.grade)
-
+        const grade = parseFloat(last.grade) - parseFloat(overallGrade)
         result.overall.down = (Number.isInteger(grade)) ? grade.toFixed(0) : grade.toFixed(2)
+        console.log("State is more than 2")
     } else if (result.overall.daysPlayed === 1) {
         console.log("State is 1")
         result.overall.down = -1
@@ -389,7 +403,7 @@ function updateAllStats() {
     const results = processStats(cumulativeData)
 
     //updateStats(todaysStatisticGrid, results.today.streak, results.today.wins, results.today.threes, results.today.fours, results.today.tens, results.today.gradeText)
-    updateStats(results.overall.daysPlayed, results.overall.wins, results.overall.threes, results.overall.fours, results.overall.tens, results.overall.gradeText, results.overall.down)
+    updateStats(results.overall.daysPlayed, results.overall.wins, results.overall.threes, results.overall.fours, results.overall.tens, results.today.gradeText, results.overall.down)
 }
 
 function updateStats(daysPlayed, wins, threes, fours, tens, grade, down) {
@@ -416,13 +430,13 @@ function updateStats(daysPlayed, wins, threes, fours, tens, grade, down) {
     if (down === null) {
         downData.textContent = "Play today's game to earn a grade!"
     } else if (down > 0) {
-        downData.textContent = "Up " + down + "% vs. last play!"
+        downData.textContent = "Up " + down + "% vs. overall grade!"
     } else if (down == 0) {
-        downData.textContent = "Same as last play!"
+        downData.textContent = "Same as overall grade!"
     } else if (down == -1) {
         downData.textContent = "Play multiple days to see your improvement!"
     } else {
-        downData.textContent = "Down " + Math.abs(down) + "% vs. last play!"
+        downData.textContent = "Down " + Math.abs(down) + "% vs. overall grade!"
     }
 
     
@@ -463,7 +477,7 @@ function pressShare() {
         showShareAlert("Link Copied! Share with Your Friends!")
     }
 
-    fireEvent("pressed-share");
+    fireEvent("pressedShare");
 }
 
 function detectTouchscreen() {
