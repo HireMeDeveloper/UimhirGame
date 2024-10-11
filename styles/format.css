@@ -25,12 +25,13 @@
 
 :root {
     --change-color: #009982;
-    --guess-color: #ABB7B7;
+    --guess-color: #DCE3E3;
     --win-color: #B8A4CF;
-    --answer-color: #FF5933;
+    --answer-color: #E94F35;
     --play-next-color: #00605C;
     --splash-screen-color: #F8FAE8;
     --dark-button-color: #585858;
+    --intro-background-color: #F6F1FD;
 }
 
 body {
@@ -136,7 +137,7 @@ html {
 }
 
 .off-white {
-    background-color: var(--splash-screen-color);
+    background-color: var(--intro-background-color);
 }
 
 .gap {
@@ -330,7 +331,7 @@ html {
 }
 
 .welcome-header {
-    width: 10em;
+    width: 6em;
 }
 
 .centered {
