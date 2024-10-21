@@ -54,8 +54,14 @@
 }
 
 .text-game-answer {
-    font-size: 1.2em;
+    font-size: 1.4em;
     font-weight: bold;
+}
+
+.text-game-answer-small {
+    font-size: 0.8em;
+    font-weight: bold;
+    color: var(--answer-color);
 }
 
 .text-game-answer.win {
@@ -75,6 +81,7 @@
 .text-stats-heading {
     font-weight: bold;
     font-size: 0.8em;
+    padding-left: 1.5em;
 }
 
 .text-stats-heading-2 {
@@ -83,6 +90,11 @@
 
 .text-stats-grade {
     font-weight: bold;
+}
+
+.text-stats-link {
+    font-size: 0.6em;
+    color: black;
 }
 
 .text-welcome-title {
@@ -102,4 +114,21 @@
 
 .text-welcome-puzzle {
     font-size: 0.8em;
+}
+
+.text-stats-guess {
+    font-size: 0.6em;
+    margin-bottom: -0.5em;
+}
+.text-stats-guess.one {
+    margin-right: 6em;
+}
+.text-stats-guess.two {
+    margin-right: 4em;
+}
+.text-stats-guess.three {
+    margin-right: 3.34em;
+}
+.text-stats-guess.four {
+    margin-right: 6.2em;
 }

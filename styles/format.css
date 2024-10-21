@@ -57,6 +57,12 @@ html {
     }
 }
 
+h2 {
+    font-weight: bold;
+    font-size: 1em;
+    margin-bottom: -0.5em;
+}
+
 .center-horizontal {
     display: flex;
     flex-direction: column;
@@ -111,8 +117,18 @@ html {
     grid-column: span 3;
 }
 
+.largerText {
+    font-size: 1.5em;
+}
+
 .key.large {
-    grid-column: span 4;
+    grid-column: span 6;
+}
+
+.key.largest {
+    grid-column: span 12;
+    background-color: #E94F35;
+    color:  white;
 }
 
 .key.white {
@@ -178,9 +194,9 @@ html {
 
 .sum-divider {
     width: .1em;
-    height: 1.8em;
+    height: 2em;
     border-radius: .1em;
-    margin-top: 2.8em;
+    margin-top: 3em;
     background-color: var(--guess-color);
 }
 
@@ -334,6 +350,10 @@ html {
     width: 6em;
 }
 
+.stats-header {
+    width: 4em;
+}
+
 .centered {
     display: flex;
     justify-content: center;
@@ -351,4 +371,29 @@ html {
 
 .grid-hidden {
     display: none;
+}
+
+.stat-bar-grid {
+    display: grid;
+    grid-template-rows: repeat(4, 1em);
+    gap: 0.5em;
+    margin-bottom: .5em;
+    margin-top: .6em;
+    width: 15em;
+}
+
+.stat-bar {
+    width: var(--width, 8em);
+    height: auto;
+    background: hsl(0, 0%, 50%);
+    text-align: right;
+    font-weight: bold;
+    color: white;
+    padding-right: .25em;
+    padding-top: .25em;
+    font-size: 0.9em;
+}
+
+.stat-bar.last {
+    background: hsl(178, 100%, 19%);
 }

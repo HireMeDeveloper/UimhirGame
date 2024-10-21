@@ -41,8 +41,8 @@
         </div>
         <div class="centered gap" style="--amount: 1em;">
             <canvas class="" id="circleCanvas" width="400" height="400" style="width: 6em; height: 6em;"></canvas>
-            <div class="no-display solution" style="height: 6em;" data-answer-element>
-                <div class="text-game-answer" data-solution-text>Closest Solution</div>
+            <div class="no-display solution" style="height: 6em; width: 20em;" data-answer-element>
+                <div class="text-game-answer-small" data-solution-text>Closest Solution</div>
                 <div class="centered">
                     <div class="box sums inline" data-solution-sums>
                         <div class="sum">175 + 20 = 195</div>
@@ -61,6 +61,14 @@
         <div class="centered">
             <div class="text-game-target" style="--color: green" data-target>350</div>
         </div>
+        <div class="gap centered" style="--amount: .5em">
+            <div class="text-game-heading centered">
+                Your Answer
+            </div>
+        </div>
+        <div class="centered">
+            <div class="text-game-answer" data-answer>350</div>
+        </div>
         <div class="gap centered relative" style="--amount: 1em">
             <div class="text-game-heading centered absolute">
                 Your Sums
@@ -75,14 +83,6 @@
                 <div class="sum">175 &emsp; + &emsp; 15 &emsp; = &emsp; 190</div>
             </div>
         </div>
-        <div class="gap centered" style="--amount: .5em">
-            <div class="text-game-heading centered">
-                Your Answer
-            </div>
-        </div>
-        <div class="centered">
-            <div class="text-game-answer" data-answer>350</div>
-        </div>
         <div class="keyboard gap" style="--amount: 1em" data-keyboard>
             <button class="key small grey">75</button>
             <button class="key small grey">25</button>
@@ -96,16 +96,17 @@
             <button class="key medium white"></button>
             <button class="key medium white"></button>
             
-            <button class="key medium dark">+</button>
-            <button class="key medium dark">-</button>
+            <button class="key medium dark largerText">+</button>
+            <button class="key medium dark largerText">-</button>
             <button class="key medium dark">x</button>
-            <button class="key medium dark">/</button>
+            <button class="key medium dark largerText">÷</button>
             
-            <button class="key large dark" onclick="pressEquals()" data-equals>=</button>
             <button class="key large dark" onclick="pressClear()" data-clear>Clear</button>
             <button class="key large dark" onclick="pressBackspace()" data-backspace>
                 <img src="resources/delete-icon.svg" class="delete-icon">
             </button>
+
+            <button class="key largest largerText" onclick="pressEquals()" data-equals>=</button>
         </div>
         <div>
             <div class="centered gap">
@@ -172,49 +173,89 @@
             </div>
         </div>
         <div class="centered gap" style="--amount: 1em">
-            <img src="resources/Uimhir_vertical.svg" class="welcome-header" alt="">
+            <img src="resources/Uimhir_vertical.svg" class="stats-header" alt="">
         </div>
-        <div class="text-stats-heading gap centered" style="--amount: 3em">
-            Your Statistics
+        <div class="text-stats-heading gap" style="--amount: 1em">
+            Your Statistics Today
         </div>
-        <div class="stats-grid-small" data-statistics-first>
+            <div class="gap centered relative">
+                <div class="statistic-label centered absolute gap" style="--amount: 9em">
+                    Your answer was within
+                </div>
+            </div>
+        <div class="stats-grid-large" data-statistics-first>
             <div class="statistic">
                 <h4 class="statistic-data">0</h4>
-                <p class="statistic-label">Played</p>
+                <p class="statistic-label">Correct</p>
             </div>
             <div class="statistic">
                 <h4 class="statistic-data">0</h4>
-                <p class="statistic-label">Win</p>
+                <p class="statistic-label gap" style="--amount: 2em">1 to 3</p>
+            </div>
+            <div class="statistic">
+                <h4 class="statistic-data">0</h4>
+                <p class="statistic-label gap" style="--amount: 2em">4 to 10</p>
+            </div>
+            <div class="statistic">
+                <h4 class="statistic-data">0</h4>
+                <p class="statistic-label gap" style="--amount: 2em">over 10</p>
+            </div>
+            <div class="statistic">
+                <h4 class="statistic-data">0</h4>
+                <p class="statistic-label">Grade</p>
             </div>
         </div>
-        <div class="text-stats-heading-2 gap centered" style="--amount: 2.5em">
-            Your answer was within:
+        <div class="text-stats-heading gap" style="--amount: 4em">
+            Your Overall Statistics
         </div>
-        <div class="stats-grid-large" data-statistics-second>
+        <div class="stats-grid-small" data-statistics-second>
             <div class="statistic">
                 <h4 class="statistic-data">0</h4>
-                <p class="statistic-label">1 to 3</p>
+                <p class="statistic-label">Days Played</p>
             </div>
             <div class="statistic">
                 <h4 class="statistic-data">0</h4>
-                <p class="statistic-label">4 to 10</p>
+                <p class="statistic-label">Games Played</p>
             </div>
             <div class="statistic">
                 <h4 class="statistic-data">0</h4>
-                <p class="statistic-label">> 10</p>
+                <p class="statistic-label">Answers Correct</p>
             </div>
-            <div class="statistic large">
+            <div class="statistic">
                 <h4 class="statistic-data">N/A</h4>
-                <p class="statistic-label text-stats-grade">Your Grade</p>
+                <p class="statistic-label">Overall Grade</p>
             </div>
         </div>
-        <div class="text-stats-heading-2 gap centered" style="--amount: 1.5em" data-stat-down>
-            Down 10% from last play
+        <div class="text-stats-heading gap" style="--amount: 4em">
+            Guess Distribution
         </div>
-        <div class="centered gap" style="--amount: 2.25em">
+        <div class="centered">
+            <div class="stat-bar-grid">
+                <div class="box left">
+                    <div class="text-stats-guess one">Correct</div>
+                    <div class="stat-bar" style="--width: 10em">0</div>
+                </div>
+                <div class="box left">
+                    <div class="text-stats-guess two">Within 1 to 3</div>
+                    <div class="stat-bar" style="--width: 1em">0</div>
+                </div>
+                <div class="box left">
+                    <div class="text-stats-guess three">Within 4 to 10</div>
+                    <div class="stat-bar" style="--width: 1em">0</div>
+                </div>
+                <div class="box left">
+                    <div class="text-stats-guess four">Over 10</div>
+                    <div class="stat-bar" style="--width: 1em">0</div>
+                </div>
+            </div>
+        </div>
+        <div class="centered gap" style="--amount: 1em">
             <button class="button share" onclick="pressShare()" data-share-button>
                 Share
             </button>
+        </div>
+        <div class="centered text-stats-link gap" style="--amount: 2em">
+            <a href="www.independent.ie/puzzles">Try our puzzles here ></a>
         </div>
     </div>
     <div id="welcome" class="page">

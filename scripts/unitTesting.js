@@ -46,7 +46,7 @@ function runStatisticsTests() {
                 threes: 0,
                 fours: 0,
                 tens: 2,
-                gradeText: "33.33%"
+                gradeText: "33%"
             },
             overall: {
                 daysPlayed: 2,
@@ -55,7 +55,7 @@ function runStatisticsTests() {
                 threes: 0,
                 fours: 1,
                 tens: 3,
-                gradeText: "N/A"
+                gradeText: "37%"
             }
         }
     );
@@ -75,8 +75,6 @@ function runTimerUnitTests() {
     timerUnitTest("test 2", 8, 4000)
     timerUnitTest("test 3", 9, 5000)
 }
-
-runSolutionsTests()
 
 function solutionUnitTest(testName, numbers, expectedResults) {
     let results = findClosestSolution(numbers)

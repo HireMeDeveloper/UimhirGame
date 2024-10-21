@@ -277,7 +277,6 @@ function processStats(cumulativeState) {
             fours: 0,
             tens: 0,
             gradeText: "N/A",
-            down: null
         }
     }
 
@@ -343,34 +342,6 @@ function processStats(cumulativeState) {
         result.overall.gradeText = overallGrade + "%"
     }
 
-    //if (result.overall.daysPlayed > 2) {
-    //    const last = cumulativeState[cumulativeState.length - 1]
-    //    const previous = cumulativeState[cumulativeState.length - 2]
-    //    console.log("State more than 2: " + last.grade)
-    //    const grade = parseFloat(last.grade) - parseFloat(previous.grade)
-    //    result.overall.down = (Number.isInteger(grade)) ? grade.toFixed(0) : grade.toFixed(2)
-    //} else if (result.overall.daysPlayed === 1) {
-    //    console.log("State is 1")
-    //    result.overall.down = -1
-    //} else {
-    //    console.log("State is 0")
-    //    result.overall.down = null
-    //}
-
-    if (result.overall.daysPlayed > 1) {
-        const last = cumulativeState[cumulativeState.length - 1]
-
-        const grade = parseFloat(last.grade) - parseFloat(overallGrade)
-        result.overall.down = (Number.isInteger(grade)) ? grade.toFixed(0) : grade.toFixed(2)
-        console.log("State is more than 2")
-    } else if (result.overall.daysPlayed === 1) {
-        console.log("State is 1")
-        result.overall.down = -1
-    } else {
-        console.log("State is 0")
-        result.overall.down = null
-    }
-
     return result;
 }
 
@@ -391,7 +362,7 @@ function evaluateDistances(distances) {
             result.threes++;
         } else if (distance > 3 && distance <= 10) {
             result.fours++;
-        } else if (distance > 10) {
+        } else {
             result.tens++;
         }
     }
@@ -402,45 +373,77 @@ function evaluateDistances(distances) {
 function updateAllStats() {
     const results = processStats(cumulativeData)
 
-    //updateStats(todaysStatisticGrid, results.today.streak, results.today.wins, results.today.threes, results.today.fours, results.today.tens, results.today.gradeText)
-    updateStats(results.overall.daysPlayed, results.overall.wins, results.overall.threes, results.overall.fours, results.overall.tens, results.today.gradeText, results.overall.down)
+    updateTodaysStats(
+        results.today.wins,
+        results.today.threes,
+        results.today.fours,
+        results.today.tens,
+        results.today.gradeText
+    )
+
+    updateOverallStats(
+        results.overall.daysPlayed,
+        results.overall.gamesPlayed,
+        results.overall.wins,
+        results.overall.gradeText
+    )
+
+    populateDistribution(
+        results.overall.wins,
+        results.overall.threes,
+        results.overall.fours,
+        results.overall.tens
+    )
 }
 
-function updateStats(daysPlayed, wins, threes, fours, tens, grade, down) {
+function updateTodaysStats(correct, threes, fours, tens, grade) {
     let firstStatisticsArray = Array.from(firstStatisticGrid.querySelectorAll('.statistic'));
+
+    const todayCorrect = firstStatisticsArray[0].querySelector('.statistic-data');
+    const todayThrees = firstStatisticsArray[1].querySelector('.statistic-data');
+    const todayfours = firstStatisticsArray[2].querySelector('.statistic-data');
+    const todaytens = firstStatisticsArray[3].querySelector('.statistic-data');
+    const todayGrade = firstStatisticsArray[4].querySelector('.statistic-data');
+
+    todayCorrect.textContent = correct
+    todayThrees.textContent = threes
+    todayfours.textContent = fours
+    todaytens.textContent = tens
+    todayGrade.textContent = grade
+}
+
+function updateOverallStats(days, games, correct, grade) {
     let secondStatisticsArray = Array.from(secondStatisticGrid.querySelectorAll('.statistic'));
 
-    const daysPlayedData = firstStatisticsArray[0].querySelector('.statistic-data');
-    const winsData = firstStatisticsArray[1].querySelector('.statistic-data');
-    const threesData = secondStatisticsArray[0].querySelector('.statistic-data');
-    const foursData = secondStatisticsArray[1].querySelector('.statistic-data');
-    const tensData = secondStatisticsArray[2].querySelector('.statistic-data');
-    const gradeData = secondStatisticsArray[3].querySelector('.statistic-data');
-    const downData = document.querySelector('[data-stat-down]')
+    const overallDays = secondStatisticsArray[0].querySelector('.statistic-data');
+    const overallGames = secondStatisticsArray[1].querySelector('.statistic-data');
+    const overallCorrect = secondStatisticsArray[2].querySelector('.statistic-data');
+    const overallGrade = secondStatisticsArray[3].querySelector('.statistic-data');
 
-    daysPlayedData.textContent = daysPlayed
-    winsData.textContent = wins
-    threesData.textContent = threes
-    foursData.textContent = fours
-    tensData.textContent = tens
-    gradeData.textContent = grade
-
-    console.log("Down is: " + down)
-
-    if (down === null) {
-        downData.textContent = "Play today's game to earn a grade!"
-    } else if (down > 0) {
-        downData.textContent = "Up " + down + "% vs. overall grade!"
-    } else if (down == 0) {
-        downData.textContent = "Same as overall grade!"
-    } else if (down == -1) {
-        downData.textContent = "Play multiple days to see your improvement!"
-    } else {
-        downData.textContent = "Down " + Math.abs(down) + "% vs. overall grade!"
-    }
-
-    
+    overallDays.textContent = days
+    overallGames.textContent = games
+    overallCorrect.textContent = correct
+    overallGrade.textContent = grade
 }
+
+function populateDistribution(correct, threes, fours, tens) {
+    const statBars = document.querySelectorAll('.stat-bar')
+    const largest = Math.max(correct, threes, fours, tens)
+
+    const arr = [correct, threes, fours, tens]
+
+    statBars.forEach((bar, index) => {
+        const number = arr[index]
+
+        bar.textContent = number
+
+        bar.style.width = ((number === 0) ? 1 : 1 + ((number / largest) * 10)) + "em"
+
+        if (number === largest) bar.classList.add('last')
+        else bar.classList.remove('last')
+    })
+}
+
 
 function getGrade(games, wins, threes, fours, tens) {
     const maxScore = games * 5;
@@ -466,7 +469,7 @@ function pressShare() {
         evaluatedDistances.tens
     )
 
-    let textToCopy = "Try Countdown! \nwww.independent.ie/countdown \n Puzzle: " + targetGameNumber + " " + "\n" + " My score today: " + grade + "% \n" 
+    let textToCopy = "Try Uimhir! \nwww.independent.ie/uimhir \n Puzzle: " + targetGameNumber + " " + "\n" + " My score today: " + grade + "% \n" 
 
     if (navigator.share && detectTouchscreen() && ALLOW_MOBILE_SHARE) {
         navigator.share({

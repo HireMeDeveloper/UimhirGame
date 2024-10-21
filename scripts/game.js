@@ -376,6 +376,8 @@ function calculateSolution(numbers) {
     })
 
     solutionText.textContent = (solution.closestSolution === solution.target) ? "Exact Solution" : "Closest Solution"
+
+    updateSolutionHeaderText()
 }
 
 function generateNumbers(large) {
@@ -504,6 +506,7 @@ function updateSums() {
     })
 
     updateCurrentAnswer()
+    updateSolutionHeaderText()
 }
 
 function updateCurrentAnswer() {
@@ -522,6 +525,26 @@ function updateCurrentAnswer() {
     storeGameStateData()
 
     checkCurrentAnswer()
+}
+
+function updateSolutionHeaderText() {
+    var solutionInfo = solutionText.textContent
+
+    var distance = activeGame.distance;
+    if (distance === null) distance = 11;
+    console.log("Distance was: " + distance)
+
+    if (distance === 0) {
+
+    } else if (distance <= 3) {
+        solutionInfo = "So close!! Here is the solution"
+    } else if (distance <= 10) {
+        solutionInfo = "Not bad. Here is the solution"
+    } else {
+        solutionInfo = "The numbers didn't suit you! Solution below"
+    }
+
+    solutionText.textContent = solutionInfo
 }
 
 function checkCurrentAnswer() {
@@ -544,7 +567,7 @@ function checkCurrentAnswer() {
 
     if (difference === 0) {
         win()
-    }
+    } 
 }
 
 function win() {
@@ -628,7 +651,7 @@ function calculateResult(number1, operation, number2) {
         result = number1 - number2;
     } else if (operation === "x") {
         result = number1 * number2;
-    } else if (operation === "/") {
+    } else if (operation === "÷") {
         result = number1 / number2;
     }
 
@@ -770,7 +793,7 @@ function restoreOperationButtons() {
     const keys = keyboard.querySelectorAll('.key');
 
     keys.forEach(key => {
-        if (key.textContent === '+' || key.textContent === '-' || key.textContent === '/' || key.textContent === 'x') {
+        if (key.textContent === '+' || key.textContent === '-' || key.textContent === '÷' || key.textContent === 'x') {
             key.classList.remove('green')
         } 
     })
@@ -870,6 +893,7 @@ function showNext() {
 function setFooterVisible(isVisible) {
     const mediumKeys = keyboard.querySelectorAll('.key.medium');
     const largeKeys = keyboard.querySelectorAll('.key.large');
+    const largestKey = keyboard.querySelector('.key.largest');
 
     if (isVisible) {
         nextButton.classList.remove("no-display")
@@ -883,6 +907,8 @@ function setFooterVisible(isVisible) {
         largeKeys.forEach((key, i) => {
             key.classList.add('grid-hidden')
         })
+
+        largestKey.classList.add('grid-hidden')
     } else {
         nextButton.classList.add("no-display")
 
@@ -895,6 +921,8 @@ function setFooterVisible(isVisible) {
         largeKeys.forEach((key, i) => {
             key.classList.remove('grid-hidden')
         })
+
+        largestKey.classList.remove('grid-hidden')
     }
 
     footerVisible = isVisible
@@ -963,7 +991,7 @@ function findClosestSolution(numbers) {
             case '*':
                 result = a * b;
                 break;
-            case '/':
+            case '÷':
                 result = (b !== 0) ? a / b : null;
                 break;
             default:
@@ -997,7 +1025,7 @@ function findClosestSolution(numbers) {
                 // Remove num1 and num2 from nums for the recursive call
                 let remaining = nums.filter((_, idx) => idx !== i && idx !== j);
 
-                ['+', '-', '*', '/'].forEach(op => {
+                ['+', '-', '*', '÷'].forEach(op => {
                     let result = applyOperation(num1, op, num2);
                     if (result === null) return; // Skip invalid operations (e.g., division by zero)
 

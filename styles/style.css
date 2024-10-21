@@ -224,10 +224,9 @@ button.hint.changed {
     display: grid;
     justify-content: center;
     align-content: center;
-    grid-template-columns: repeat(2, 3em);
+    grid-template-columns: repeat(4, 3em);
     grid-template-rows: repeat(1, 3em);
     gap: .5em;
-    margin-bottom: 1em;
     margin-top: -.5em;
 }
 
@@ -235,9 +234,8 @@ button.hint.changed {
     display: grid;
     justify-content: center;
     align-content: center;
-    grid-template-columns: repeat(3, 3em);
-    grid-template-rows: repeat(2, 3em);
+    grid-template-columns: repeat(5, 3em);
+    grid-template-rows: repeat(1, 3em);
     gap: .5em;
-    margin-bottom: 1em;
     margin-top: -.5em;
 }
