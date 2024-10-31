@@ -41,10 +41,10 @@
         </div>
         <div class="centered gap" style="--amount: 1em;">
             <canvas class="" id="circleCanvas" width="400" height="400" style="width: 6em; height: 6em;"></canvas>
-            <div class="no-display solution" style="height: 6em; width: 20em;" data-answer-element>
+            <div class="no-display solution" style="height: 6em; width: 18em;" data-answer-element>
                 <div class="text-game-answer-small" data-solution-text>Closest Solution</div>
                 <div class="centered">
-                    <div class="box sums inline" data-solution-sums>
+                    <div class="sums-box answer inline" data-solution-sums>
                         <div class="sum">175 + 20 = 195</div>
                         <div class="sum">175 + 20 = 195</div>
                         <div class="sum">175 + 20 = 195</div>
@@ -71,16 +71,31 @@
         </div>
         <div class="gap centered relative" style="--amount: 1em">
             <div class="text-game-heading centered absolute">
-                Your Sums
+                Your Five Sums
             </div>
-            <div class="sum-divider centered absolute"></div>
         </div>
         <div class="centered" style="--amount: 1em">
-            <div class="box sums"  data-sums>
-                <div class="sum">175 &emsp; + &emsp; 15 &emsp; = &emsp; 190</div>
-                <div class="sum">175 &emsp; + &emsp; 15 &emsp; = &emsp; 190</div>
-                <div class="sum">175 &emsp; + &emsp; 15 &emsp; = &emsp; 190</div>
-                <div class="sum">175 &emsp; + &emsp; 15 &emsp; = &emsp; 190</div>
+            <div class="sums-box"  data-sums>
+                <div class="sum">
+                    <div class="sum-number">1</div>
+                    <div class="sum-text">175 + 15 = 190</div>
+                </div>
+                <div class="sum">
+                    <div class="sum-number">2</div>
+                    <div class="sum-text">175 + 15 = 190</div>
+                </div>
+                <div class="sum">
+                    <div class="sum-number" data-num>3</div>
+                    <div class="sum-text" data-sum>175 + 15 = 190</div>
+                </div>
+                <div class="sum">
+                    <div class="sum-number">4</div>
+                    <div class="sum-text">175 + 15 = 190</div>
+                </div>
+                <div class="sum">
+                    <div class="sum-number">5</div>
+                    <div class="sum-text">175 + 15 = 190</div>
+                </div>
             </div>
         </div>
         <div class="keyboard gap" style="--amount: 1em" data-keyboard>
@@ -105,8 +120,6 @@
             <button class="key large dark" onclick="pressBackspace()" data-backspace>
                 <img src="resources/delete-icon.svg" class="delete-icon">
             </button>
-
-            <button class="key largest largerText" onclick="pressEquals()" data-equals>=</button>
         </div>
         <div>
             <div class="centered gap">
@@ -121,41 +134,108 @@
         </div>
     </div>
     <div id="info" class="page active">
-        <div class="text-info-title gap centered" style="--amount: 0.8em">
+        <div>
+            <div class="alert-container" data-alert-container></div>
+            <div class="header">
+                <div>
+                    <img src="resources/Uimhir_horizontal.svg" class="countdown-horizontal-icon">
+                </div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div class="margin-right"></div>
+                <div>
+                    <a onclick="showPage('stats')">
+                        <img src="resources/stats-icon.svg" class="icon">
+                    </a>
+                </div>
+            </div>
+            <div class="underline"></div>
+        </div>
+        <div class="text-info-title gap" style="--amount: 0.8em">
             How To Play
         </div>
-        <div class="centered">
-            <div class="text-box-info heading gap centered" style="--amount: 1.1em">
-                Three Daily Games, 30 Seconds each
+        <div class="">
+            <div class="text-box-info heading gap" style="--amount: 1.1em">
+                Five Sums
+            </div>
+        </div>
+        <div class="">
+            <div class="text-box-info gap" style="--amount: 0.4em">
+                Get as close as possible to the target number in five attempts.
+            </div>
+        </div>
+        <div class="gap centered" style="--amount: 0.5em">
+            <div class="text-game-heading centered">
+                Target
             </div>
         </div>
         <div class="centered">
-            <div class="text-box-info gap centered" style="--amount: 1.1em">
-                Use any combination of six numbers to reach <br> the target number.
+            <div class="text-game-target" style="--color: green">421</div>
+        </div>
+        <div class="gap centered" style="--amount: .5em">
+            <div class="text-game-heading centered">
+                Your Answer
             </div>
         </div>
         <div class="centered">
-            <div class="text-box-info heading gap centered" style="--amount: 1.1em">
-                Tile Colours
+            <div class="text-game-answer">420</div>
+        </div>
+        <div class="gap centered relative" style="--amount: 1em">
+            <div class="text-game-heading centered absolute">
+                Your Five Sums
             </div>
         </div>
-        <div class="centered">
-            <div class="text-box-info gap centered" style="--amount: .2em">
-                Each of the six numbers in white <br>can be used only once. The colour of the tiles change to green when used.
-                The tiles on the second row, are the results of your calculations. These can also be used to get the answer.
+        <div class="centered" style="--amount: 1em">
+            <div class="sums-box">
+                <div class="sum">
+                    <div class="sum-number green">1</div>
+                    <div class="sum-text">100 x 4 = 400</div>
+                </div>
+                <div class="sum">
+                    <div class="sum-number green">2</div>
+                    <div class="sum-text">8 + 7 = 15</div>
+                </div>
+                <div class="sum">
+                    <div class="sum-number green" data-num>3</div>
+                    <div class="sum-text" data-sum>5 + 15 = 20</div>
+                </div>
+                <div class="sum">
+                    <div class="sum-number green">4</div>
+                    <div class="sum-text">400 + 20 = 420</div>
+                </div>
+                <div class="sum">
+                    <div class="sum-number">5</div>
+                    <div class="sum-text"></div>
+                </div>
             </div>
         </div>
-        <div class="centered">
-            <div class="text-box-info heading gap centered" style="--amount: 1.1em">
+        <div class="">
+            <div class="text-box-info heading gap" style="--amount: 0.4em">
+                Six Numbers
+            </div>
+        </div>
+        <div class="">
+            <div class="text-box-info gap" style="--amount: .2em">
+                All numbers can be used once, including the results of your sums. The numbers will change to green when used.
+            </div>
+        </div>
+        <div class="">
+            <div class="text-box-info heading gap" style="--amount: 0.4em">
                 Results
             </div>
         </div>
-        <div class="centered">
-            <div class="text-box-info gap centered" style="--amount: .2em">
-                After three daily rounds, <br>you receive a grading depending on how <br>close you are to the answer each time.
+        <div class="">
+            <div class="text-box-info-single gap" style="--amount: .2em">
+                After three daily raounds, you will reveive a grading depending on how close you are to the answer each time.  
+                The closer you are the higher your grade! Have feedback? <a href="mailto:customerhelp@independent?subject=Uimhir%20Puzzle%20Feedback.">Email us</a>.
             </div>
         </div>
-        <div class="centered gap" style="--amount: 5.5em">
+        <div class="centered gap" style="--amount: 0.2em">
             <button class="button play" data-play-button>
                 Play
             </button>

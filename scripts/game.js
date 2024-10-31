@@ -163,7 +163,7 @@ function startTimer() {
     startInteraction()
 
     timerStarted = true
-    let timerDuration = getTimerDuration(40)
+    let timerDuration = getTimerDuration(45)
     updateTimer(timerDuration, timerDuration)
 
     updateCumulativeData()
@@ -326,7 +326,7 @@ function removeAllFlip() {
     })
 }
 
-function loadPuzzle(index) {
+async function loadPuzzle(index) {
     activeGame = gameState.games[index]
     gameState.currentGame = index
     storeGameStateData()
@@ -361,23 +361,23 @@ function loadPuzzle(index) {
     updateGameText()
 }
 
-function calculateSolution(numbers) {
+async function calculateSolution(numbers) {
     const solutionSums = solutionSumParent.querySelectorAll('.sum')
-    let solution = findClosestSolution(numbers)
+    findClosestSolution(numbers).then((solution) => {
+        solutionSums.forEach((sum, i) => {
+            if (solution.sums.length > i) {
+                const currentSum = solution.sums[i]
 
-    solutionSums.forEach((sum, i) => {
-        if (solution.sums.length > i) {
-            const currentSum = solution.sums[i]
+                sum.textContent = currentSum[0] + " " + currentSum[1] + " " + currentSum[2] + " " + currentSum[3] + " " + currentSum[4]
+            } else {
+                sum.textContent = ""
+            }
+        })
 
-            sum.textContent = currentSum[0] + " " + currentSum[1] + " " + currentSum[2] + " " + currentSum[3] + " " + currentSum[4]
-        } else {
-            sum.textContent = ""
-        }
+        solutionText.textContent = (solution.closestSolution === solution.target) ? "Exact Solution" : "Closest Solution"
+
+        updateSolutionHeaderText()
     })
-
-    solutionText.textContent = (solution.closestSolution === solution.target) ? "Exact Solution" : "Closest Solution"
-
-    updateSolutionHeaderText()
 }
 
 function generateNumbers(large) {
@@ -428,7 +428,7 @@ function updateExtraButtons() {
     const extraNumbers = activeGame.extraNumbers;
 
     mediumKeys.forEach((key, i) => {
-        if (extraNumbers.length > i) {
+        if (extraNumbers.length > i && i < 4) {
             if (key.classList.contains('white')) {
                 flipKey(key, extraNumbers[i])
             } else {
@@ -474,6 +474,9 @@ function updateSums() {
     const sumsArray = sums.querySelectorAll('.sum');
 
     sumsArray.forEach((sum, i) => {
+        let sumNumberElement = sum.querySelector('.sum-number')
+        let sumTextElement = sum.querySelector('.sum-text')
+
         if (activeGame.sums.length > i) {
             let currentSum = activeGame.sums[i]
             let sumText = ""
@@ -494,14 +497,16 @@ function updateSums() {
 
                 if (i === activeGame.sums.length - 1) {
                     completeSum()
-                } 
+                }
             }
                 
-            sum.textContent = sumText;
-            sum.classList.remove('hidden')
+            sumTextElement.textContent = sumText;
+            sumNumberElement.classList.add('green')
+
+            sumTextElement.classList.remove('hidden')
         } else {
-            sum.textContent = "YOU CANT SEE THIS"
-            sum.classList.add('hidden')
+            sumNumberElement.classList.remove('green')
+            sumTextElement.classList.add('hidden')
         }
     })
 
@@ -711,7 +716,7 @@ function pressBackspace() {
 function pressNumber(key) {
     if (canInteract === false) return;
 
-    if (expectedInput != "number" || activeGame.sums.length >= 5) {
+    if (expectedInput != "number" || activeGame.sums.length >= 6) {
         shakeKey(key)
         return;
     } 
@@ -732,12 +737,21 @@ function pressNumber(key) {
         expectedInput = "operation"
     } else {
         expectedInput = "equals"
+        pressEquals();
     }
 }
 
 function pressOperation(key) {
     if (canInteract === false) return;
     //console.log("expectedInput: " + expectedInput);
+
+    const lastSum = activeGame.sums[activeGame.sums.length - 1]
+
+    if (expectedInput == "number" && lastSum.length > 1) {
+        pressBackspace();
+        pressOperation(key)
+        return
+    }
 
     if (expectedInput != "operation") {
         shakeKey(key)
@@ -749,8 +763,6 @@ function pressOperation(key) {
 
     buttonsPressed.push(key)
     updateButtonsPressedForCurrentPuzzle()
-
-    const lastSum = activeGame.sums[activeGame.sums.length - 1]
 
     lastSum.push(key.textContent)
     storeGameStateData()
@@ -893,7 +905,6 @@ function showNext() {
 function setFooterVisible(isVisible) {
     const mediumKeys = keyboard.querySelectorAll('.key.medium');
     const largeKeys = keyboard.querySelectorAll('.key.large');
-    const largestKey = keyboard.querySelector('.key.largest');
 
     if (isVisible) {
         nextButton.classList.remove("no-display")
@@ -907,8 +918,6 @@ function setFooterVisible(isVisible) {
         largeKeys.forEach((key, i) => {
             key.classList.add('grid-hidden')
         })
-
-        largestKey.classList.add('grid-hidden')
     } else {
         nextButton.classList.add("no-display")
 
@@ -922,7 +931,6 @@ function setFooterVisible(isVisible) {
             key.classList.remove('grid-hidden')
         })
 
-        largestKey.classList.remove('grid-hidden')
     }
 
     footerVisible = isVisible
@@ -971,7 +979,7 @@ function shakeKey(key) {
     }, { once: true })
 }
 
-function findClosestSolution(numbers) {
+async function findClosestSolution(numbers) {
     const target = numbers[0]; // The first number is the target
     let candidates = numbers.slice(1); // Remaining 6 numbers
     let closestSolution = null;
@@ -988,7 +996,7 @@ function findClosestSolution(numbers) {
             case '-':
                 result = a - b;
                 break;
-            case '*':
+            case 'x':
                 result = a * b;
                 break;
             case '÷':
@@ -1025,7 +1033,7 @@ function findClosestSolution(numbers) {
                 // Remove num1 and num2 from nums for the recursive call
                 let remaining = nums.filter((_, idx) => idx !== i && idx !== j);
 
-                ['+', '-', '*', '÷'].forEach(op => {
+                ['+', '-', 'x', '÷'].forEach(op => {
                     let result = applyOperation(num1, op, num2);
                     if (result === null) return; // Skip invalid operations (e.g., division by zero)
 

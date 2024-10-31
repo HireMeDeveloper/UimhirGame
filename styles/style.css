@@ -239,3 +239,7 @@ button.hint.changed {
     gap: .5em;
     margin-top: -.5em;
 }
+
+.margin-right {
+    margin-right: 0.25em;
+}
