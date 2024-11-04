@@ -84,7 +84,7 @@ h2 {
 .keyboard {
     display: grid;
     grid-template-columns: repeat(12, minmax(auto, 1.3em));
-    grid-auto-rows: 2.25em;
+    grid-auto-rows: 0.5em;
     gap: .1em;
     justify-content: center;
 }
@@ -105,12 +105,18 @@ h2 {
     border: none;
     border-radius: 0.1em;
     grid-column: span 2;
+    grid-row: span 4;
     transition: transform 250ms;
     color: black;
     display: flex;
     text-align: center;
     justify-content: center;
     align-items: center;
+}
+
+.key-gap {
+    grid-column: span 12;
+    grid-row: span 1;
 }
 
 .key.medium {
@@ -248,16 +254,16 @@ h2 {
 }
 
 .text-box-info-single {
-    width: 25em;
+    width: 30em;
     justify-content: left;
-    font-size: .7em;
+    font-size: .6em;
 }
 
 .text-box-info {
-    width: 25em;
+    width: 30em;
     display: flex;
     justify-content: left;
-    font-size: .7em;
+    font-size: .6em;
 }
 
 .text-box-info.heading {

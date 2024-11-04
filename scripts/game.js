@@ -222,6 +222,12 @@ function timerEnd() {
     storeGameStateData()
 
     updateTimerDisplay(false)
+
+    if (gameState.currentGame > 1) {
+        setTimeout(() => {
+            showPage('stats');
+        }, 5000)
+    }
 }
 
 function updateTimerDisplay(hasWon) {
@@ -585,6 +591,12 @@ function win() {
     storeGameStateData()
 
     stopInteraction()
+
+    if (gameState.currentGame > 1) {
+        setTimeout(() => {
+            showPage('stats');
+        }, 5000)
+    }
 }
 
 function completeGame() {
