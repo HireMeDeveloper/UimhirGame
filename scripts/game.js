@@ -507,7 +507,9 @@ function updateSums() {
             }
                 
             sumTextElement.textContent = sumText;
-            sumNumberElement.classList.add('green')
+
+            if (currentSum.length > 0) sumNumberElement.classList.add('green')
+            else sumNumberElement.classList.remove('green')
 
             sumTextElement.classList.remove('hidden')
         } else {
