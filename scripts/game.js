@@ -9,6 +9,8 @@ let activeGame
 let expectedInput = "number" // number, operation, equals
 let buttonsPressed = []
 
+let updateTimerTimoutId;
+
 let gameState = {
     games: [
         {
@@ -67,6 +69,7 @@ const targetElement = document.querySelector("[data-target]")
 const answerTextElement = document.querySelector("[data-answer]")
 const sums = document.querySelector("[data-sums]")
 const nextButton = document.querySelector("[data-next]")
+const nextButton2 = document.querySelector("[data-next-two]")
 
 const gameText = document.querySelector("[data-game-text]")
 const gameLettersText = document.querySelector("[data-game-letters]")
@@ -206,7 +209,7 @@ function updateTimer(totalHundredths, maxTime) {
     //timerText.textContent = formattedTime
 
     if (totalHundredths > 0) {
-        setTimeout(() => {
+        updateTimerTimoutId = setTimeout(() => {
             updateTimer(totalHundredths - 1, maxTime)
         }, 10)
     } else {
@@ -517,6 +520,12 @@ function updateSums() {
             sumTextElement.classList.add('hidden')
         }
     })
+
+    if (activeGame.sums.length > 5 && currentTimerTime > 0) {
+        showOnlyNext()
+    } else if (currentTimerTime > 0) {
+        hideOnlyNext()
+    }
 
     updateCurrentAnswer()
     updateSolutionHeaderText()
@@ -876,6 +885,7 @@ function pressClear() {
 }
 
 function playNext() {
+    if (updateTimerTimoutId != null) clearTimeout(updateTimerTimoutId)
     enableTimerDisplay()
 
     resetButtons()
@@ -884,8 +894,40 @@ function playNext() {
     const currentGameNumber = gameState.currentGame
     loadPuzzle(currentGameNumber + 1)
     timerStarted = false;
-    
+
     startTimer()
+}
+
+function showOnlyNext() {
+    console.log("Showing Only Next")
+
+    if (gameState.currentGame < 2) {
+        console.log("Less than 3")
+        nextButton2.textContent = "Play Next"
+        nextButton2.onclick = function () {
+            playNext()
+            fireEvent("playNextGame")
+        }
+    } else {
+        console.log("More than 3")
+        nextButton2.textContent = "See Stats"
+        nextButton2.onclick = function () {
+            showPage("stats")
+            fireEvent("gameThreeToStats")
+        }
+
+        if (gameState.isComplete === false) {
+            fireEvent("onFirstCompletion")
+            gameState.isComplete = true;
+            storeGameStateData()
+        }
+    }
+
+    nextButton2.classList.remove("no-display")
+}
+
+function hideOnlyNext() {
+    nextButton2.classList.add("no-display")
 }
 
 function showNext() {
@@ -922,6 +964,7 @@ function setFooterVisible(isVisible) {
 
     if (isVisible) {
         nextButton.classList.remove("no-display")
+        nextButton2.classList.add("no-display")
         
         mediumKeys.forEach((key, i) => {
             if (i >= 4) {

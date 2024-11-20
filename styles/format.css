@@ -455,6 +455,22 @@ h2 {
     font-size: 0.9em;
 }
 
+.stat-bar.one {
+    background: #D2DB5c;
+}
+
+.stat-bar.two {
+    background: #009982;
+}
+
+.stat-bar.three {
+    background: #00605c;
+}
+
+.stat-bar.four {
+    background: #ff5933;
+}
+
 .stat-bar.last {
     background: hsl(178, 100%, 19%);
 }
