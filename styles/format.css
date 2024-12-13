@@ -178,6 +178,10 @@ h2 {
     width: 19.0em;
 }
 
+.box.both {
+    justify-content: space-between;
+}
+
 .box.buttons {
     width: 17.5em;
 }
@@ -472,5 +476,5 @@ h2 {
 }
 
 .stat-bar.last {
-    background: hsl(178, 100%, 19%);
+    
 }

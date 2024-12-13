@@ -61,6 +61,9 @@
     user-select: none;
     cursor: pointer;
 }
+.icon.back {
+    height: 2em;
+}
 
 .icon.hidden {
     visibility: hidden;
