@@ -14,6 +14,7 @@ let updateTimerTimoutId;
 let gameState = {
     games: [
         {
+            index: 0,
             largeNumbers: 2,
             currentAnswer: null,
             numbers: [],
@@ -27,6 +28,7 @@ let gameState = {
             wasStarted: false
         },
         {
+            index: 1,
             largeNumbers: 3,
             currentAnswer: null,
             numbers: [],
@@ -40,6 +42,7 @@ let gameState = {
             wasStarted: false
         },
         {
+            index: 2,
             largeNumbers: 1,
             currentAnswer: null,
             numbers: [],
@@ -89,6 +92,7 @@ function resetGameState() {
     gameState = {
         games: [
             {
+                index: 0,
                 largeNumbers: 2,
                 currentAnswer: null,
                 numbers: generateNumbers(2),
@@ -102,6 +106,7 @@ function resetGameState() {
                 wasStarted: false
             },
             {
+                index: 1,
                 largeNumbers: 3,
                 currentAnswer: null,
                 numbers: generateNumbers(3),
@@ -115,6 +120,7 @@ function resetGameState() {
                 wasStarted: false
             },
             {
+                index: 2,
                 largeNumbers: 1,
                 currentAnswer: null,
                 numbers: generateNumbers(1),
@@ -139,10 +145,15 @@ function resetGameState() {
 }
 
 function openGame() {
+
+    gameState.currentGame = activeGame.index
+    activeGame.wasStarted = true;
+    storeGameStateData()
+
     if (gameState.isComplete) {
-        loadPuzzleFromState(gameState.currentGame)
+        //loadPuzzleFromState(gameState.currentGame)
     } else {
-        loadPuzzle(gameState.currentGame)
+        //loadPuzzle(gameState.currentGame)
     }
 
     if (gameState.hasOpenedPuzzle === false) {
@@ -337,13 +348,6 @@ function removeAllFlip() {
 
 async function loadPuzzle(index) {
     activeGame = gameState.games[index]
-    gameState.currentGame = index
-    storeGameStateData()
-
-    if (activeGame.wasStarted === false) {
-        activeGame.wasStarted = true;
-        storeGameStateData()
-    }
 
     updateExtraButtons()
     updateSums()

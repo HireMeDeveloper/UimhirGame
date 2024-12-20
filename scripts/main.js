@@ -172,7 +172,6 @@ function fetchGameState() {
     } else {
         loadPuzzle(gameState.currentGame)
         showPage('info')
-        
     }
 }
 
