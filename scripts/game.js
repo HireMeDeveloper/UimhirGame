@@ -325,7 +325,7 @@ function removeAllFlip() {
     const extraNumbers = activeGame.extraNumbers;
 
     mediumKeys.forEach((key, i) => {
-        if (extraNumbers.length > i) {
+        if (extraNumbers.length > i && i < 4) {
             key.classList.add('grey')
             key.textContent = extraNumbers[i]
             key.style.fontSize = getFontSizeFromDigits(extraNumbers[i].toString().length)
@@ -347,6 +347,9 @@ function removeAllFlip() {
 }
 
 async function loadPuzzle(index) {
+    gameState.currentGame = index
+    storeGameStateData()
+
     activeGame = gameState.games[index]
 
     updateExtraButtons()
@@ -424,6 +427,8 @@ function generateNumbers(large) {
 
 function resetExtraButtons() {
     const mediumKeys = keyboard.querySelectorAll('.key.medium');
+
+
     mediumKeys.forEach((key, i) => {
         if (i < 4) {
             key.classList.remove('grey');
@@ -726,7 +731,8 @@ function pressBackspace() {
     else if (lastSum.length <= 3) {
         // Free up the last button
         let button = buttonsPressed.pop()
-        button.classList.remove('green')
+
+        if (button != null) button.classList.remove('green')
 
         updateButtonsPressedForCurrentPuzzle()
 
@@ -880,7 +886,7 @@ function pressClear() {
         let button = buttonsPressed.pop()
         updateButtonsPressedForCurrentPuzzle()
 
-        button.classList.remove('green')
+        if (button != null) button.classList.remove('green')
     }
 
     activeGame.sums[lastSumIndex] = []
@@ -889,13 +895,18 @@ function pressClear() {
 }
 
 function playNext() {
-    if (updateTimerTimoutId != null) clearTimeout(updateTimerTimoutId)
+    console.log("playNext called");
+    if (updateTimerTimoutId != null) {
+        console.log("Clearing updateTimerTimoutId");
+        clearTimeout(updateTimerTimoutId);
+    }
     enableTimerDisplay()
 
     resetButtons()
     resetExtraButtons()
 
     const currentGameNumber = gameState.currentGame
+    console.log("Current game number:", currentGameNumber);
     loadPuzzle(currentGameNumber + 1)
     timerStarted = false;
 
